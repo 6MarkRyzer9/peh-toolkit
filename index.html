@@ -64,6 +64,30 @@
       <h1>PEH Toolkit</h1>
       <p class="subtitulo" id="sesion-info"></p>
 
+      <!-- Pregunta sugerida (RF-02); editar o agregar no toca el banco (RF-03, RN7) -->
+      <div class="tarjeta pregunta">
+        <span class="pregunta-tipo" id="pregunta-tipo"></span>
+        <p class="pregunta-texto" id="pregunta-texto">Cargando preguntas…</p>
+
+        <div class="pregunta-acciones" id="pregunta-acciones">
+          <button type="button" id="boton-otra" class="boton-suave">Otra</button>
+          <button type="button" id="boton-editar" class="boton-suave">Editar</button>
+          <button type="button" id="boton-agregar" class="boton-suave">Agregar</button>
+        </div>
+
+        <div id="pregunta-editor" class="oculto">
+          <textarea
+            id="pregunta-campo"
+            rows="3"
+            aria-label="Texto de la pregunta"
+          ></textarea>
+          <div class="pregunta-acciones">
+            <button type="button" id="boton-usar">Usar</button>
+            <button type="button" id="boton-cancelar-edicion" class="boton-suave">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
       <div id="lista-criterios"></div>
 
       <p id="estado-veredicto" class="tarjeta mensaje" role="status"></p>

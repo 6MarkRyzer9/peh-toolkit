@@ -1,11 +1,14 @@
 // pantallas/sesion.js — pantalla de sesión: marcas C1-C4 con botones 1 y 0,
 // corrección mientras la sesión está abierta, estado del veredicto (RF-04,
 // RF-05, RN3) y cierre con confirmación (CU-07). Cada marca se guarda al
-// instante (RNF-08).
-// Pendiente: pregunta sugerida y micro-guías dentro de la sesión.
+// instante (RNF-08). Incluye la pregunta sugerida con «Otra», «Editar» y
+// «Agregar» (RF-02, RF-03): ediciones solo para la sesión, sin tocar el
+// banco (RN7).
+// Pendiente: micro-guías con el botón «?» dentro de la sesión (RF-06).
 
 import { CRITERIOS, calcularVeredicto } from '../motor.js';
 import { guardarMarca, cerrarSesion, descartarSesion } from '../almacen.js';
+import { cargarPreguntas, TIPOS_LIPMAN } from '../banco.js';
 import { NOMBRES_CONTEXTO } from './crear-sesion.js';
 
 export const NOMBRES_CRITERIOS = {
@@ -18,6 +21,14 @@ export const NOMBRES_CRITERIOS = {
 let sesion = null;
 let avisarDescarte = () => {};
 let avisarCierre = () => {};
+
+// Estado de la pregunta sugerida. Vive solo en memoria: la sesión no guarda
+// qué se preguntó (requisito futuro) y las ediciones no tocan el banco (RN7).
+let preguntas = [];
+let indicePregunta = 0;
+let textoPersonalizado = null;
+let preguntaAgregada = false;
+let modoEditor = null; // 'editar' | 'agregar' | null
 
 export function iniciarPantallaSesion({ alDescartar, alCerrar }) {
   avisarDescarte = alDescartar;
@@ -54,6 +65,38 @@ export function iniciarPantallaSesion({ alDescartar, alCerrar }) {
 
   document.querySelector('#boton-cerrar').addEventListener('click', intentarCerrar);
 
+  // Pregunta sugerida (RF-02, RF-03).
+  document.querySelector('#boton-otra').addEventListener('click', () => {
+    textoPersonalizado = null;
+    preguntaAgregada = false;
+    if (preguntas.length > 0) {
+      indicePregunta = (indicePregunta + 1) % preguntas.length;
+    }
+    cerrarEditor();
+    mostrarPregunta();
+  });
+
+  document.querySelector('#boton-editar').addEventListener('click', () => {
+    abrirEditor('editar', document.querySelector('#pregunta-texto').textContent);
+  });
+
+  document.querySelector('#boton-agregar').addEventListener('click', () => {
+    abrirEditor('agregar', '');
+  });
+
+  document.querySelector('#boton-usar').addEventListener('click', () => {
+    const texto = document.querySelector('#pregunta-campo').value.trim();
+    if (!texto) {
+      return;
+    }
+    textoPersonalizado = texto;
+    preguntaAgregada = modoEditor === 'agregar';
+    cerrarEditor();
+    mostrarPregunta();
+  });
+
+  document.querySelector('#boton-cancelar-edicion').addEventListener('click', cerrarEditor);
+
   document.querySelector('#boton-descartar').addEventListener('click', () => {
     if (!sesion) {
       return;
@@ -71,6 +114,56 @@ export function iniciarPantallaSesion({ alDescartar, alCerrar }) {
 export function abrirSesion(nueva) {
   sesion = nueva;
   pintar();
+  prepararPreguntas();
+}
+
+async function prepararPreguntas() {
+  preguntas = [];
+  indicePregunta = 0;
+  textoPersonalizado = null;
+  preguntaAgregada = false;
+  cerrarEditor();
+  try {
+    preguntas = await cargarPreguntas(sesion.contexto);
+  } catch (error) {
+    console.warn(error);
+  }
+  mostrarPregunta();
+}
+
+function mostrarPregunta() {
+  const tipo = document.querySelector('#pregunta-tipo');
+  const texto = document.querySelector('#pregunta-texto');
+
+  if (textoPersonalizado) {
+    tipo.textContent = preguntaAgregada
+      ? 'Pregunta propia · solo esta sesión'
+      : 'Pregunta editada · solo esta sesión';
+    texto.textContent = textoPersonalizado;
+  } else if (preguntas.length > 0) {
+    const pregunta = preguntas[indicePregunta];
+    tipo.textContent = `Pregunta sugerida · ${TIPOS_LIPMAN[pregunta.tipo]}`;
+    texto.textContent = pregunta.texto;
+  } else {
+    tipo.textContent = 'Banco de preguntas';
+    texto.textContent =
+      'No hay preguntas para este contexto. Puedes agregar una con «Agregar».';
+  }
+}
+
+function abrirEditor(modo, textoInicial) {
+  modoEditor = modo;
+  const campo = document.querySelector('#pregunta-campo');
+  campo.value = textoInicial;
+  document.querySelector('#pregunta-editor').classList.remove('oculto');
+  document.querySelector('#pregunta-acciones').classList.add('oculto');
+  campo.focus();
+}
+
+function cerrarEditor() {
+  modoEditor = null;
+  document.querySelector('#pregunta-editor').classList.add('oculto');
+  document.querySelector('#pregunta-acciones').classList.remove('oculto');
 }
 
 function pantallaOculta() {
