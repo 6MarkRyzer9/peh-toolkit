@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#3b6ea5">
+  <title>PEH Toolkit</title>
+  <link rel="stylesheet" href="css/estilos.css">
+  <link rel="manifest" href="manifest.webmanifest">
+</head>
+<body>
+  <main class="pantalla">
+    <h1>PEH Toolkit</h1>
+    <p class="subtitulo">Nueva sesión de evaluación</p>
+
+    <form id="form-crear-sesion">
+      <fieldset class="campo" style="border: none; padding: 0; margin: 0 0 20px;">
+        <legend class="etiqueta" style="font-weight: 600; padding: 0; margin-bottom: 8px;">
+          Contexto de la evaluación
+        </legend>
+        <div class="opciones-contexto">
+          <label class="opcion">
+            <input type="radio" name="contexto" value="aula">
+            <span>Aula escolar</span>
+          </label>
+          <label class="opcion">
+            <input type="radio" name="contexto" value="catedra">
+            <span>Cátedra universitaria</span>
+          </label>
+          <label class="opcion">
+            <input type="radio" name="contexto" value="rrhh">
+            <span>Entrevista técnica de RRHH</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <div class="campo">
+        <label for="codigo-evaluado">Código del evaluado</label>
+        <input
+          type="text"
+          id="codigo-evaluado"
+          name="codigo"
+          placeholder="Por ejemplo: A7K2"
+          autocomplete="off"
+          autocapitalize="characters"
+          maxlength="12"
+        >
+        <p class="ayuda">
+          Solo letras y números (3 a 12 caracteres). Nunca ingreses nombre, RUT ni contacto.
+        </p>
+      </div>
+
+      <button type="submit" id="boton-crear" class="boton-principal" disabled>
+        Crear sesión
+      </button>
+    </form>
+
+    <p id="mensaje" class="tarjeta mensaje oculto" role="status"></p>
+  </main>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
