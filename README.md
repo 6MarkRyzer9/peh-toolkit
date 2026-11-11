@@ -33,8 +33,8 @@ HTML, CSS y JavaScript con módulos ES, sin frameworks ni paso de build. Datos e
 ## Desarrollo
 
 ```bash
-# Ejecutar las pruebas del motor de cálculo (Node 18 o superior)
-node --test tests/motor.test.js
+# Ejecutar las pruebas (Node 18 o superior)
+node --test
 ```
 
 Para probar la app basta abrir `index.html` con un servidor estático, por ejemplo `npx serve .`.
@@ -49,7 +49,7 @@ Proyecto del ramo Ingeniería de Software, Universidad Alberto Hurtado, 2026.
 1. Clonar el repositorio: `git clone https://github.com/<usuario>/peh-toolkit.git`
 2. Crear una rama por tarea: `git checkout -b nombre-de-la-tarea`
 3. Hacer commits pequeños y abrir un *pull request* hacia `main` para que otra persona lo revise.
-4. Antes de subir, correr las pruebas: `node --test tests/motor.test.js`
+4. Antes de subir, correr las pruebas: `node --test`
 5. El estado del proyecto (lo hecho, lo pendiente y el siguiente paso) está en [PROGRESO.md](PROGRESO.md).
 
 Los requisitos viven en `docs/Hito2_SRS_PEH_Toolkit_v2.1.pdf` y las reglas de trabajo en [CLAUDE.md](CLAUDE.md).

@@ -10,52 +10,82 @@
 </head>
 <body>
   <main class="pantalla">
-    <h1>PEH Toolkit</h1>
-    <p class="subtitulo">Nueva sesión de evaluación</p>
 
-    <form id="form-crear-sesion">
-      <fieldset class="campo" style="border: none; padding: 0; margin: 0 0 20px;">
-        <legend class="etiqueta" style="font-weight: 600; padding: 0; margin-bottom: 8px;">
-          Contexto de la evaluación
-        </legend>
-        <div class="opciones-contexto">
-          <label class="opcion">
-            <input type="radio" name="contexto" value="aula">
-            <span>Aula escolar</span>
-          </label>
-          <label class="opcion">
-            <input type="radio" name="contexto" value="catedra">
-            <span>Cátedra universitaria</span>
-          </label>
-          <label class="opcion">
-            <input type="radio" name="contexto" value="rrhh">
-            <span>Entrevista técnica de RRHH</span>
-          </label>
+    <!-- Pantalla 1: Crear sesión (RF-01) -->
+    <section id="pantalla-crear">
+      <h1>PEH Toolkit</h1>
+      <p class="subtitulo">Nueva sesión de evaluación</p>
+
+      <form id="form-crear-sesion">
+        <fieldset class="campo" style="border: none; padding: 0; margin: 0 0 20px;">
+          <legend class="etiqueta" style="font-weight: 600; padding: 0; margin-bottom: 8px;">
+            Contexto de la evaluación
+          </legend>
+          <div class="opciones-contexto">
+            <label class="opcion">
+              <input type="radio" name="contexto" value="aula">
+              <span>Aula escolar</span>
+            </label>
+            <label class="opcion">
+              <input type="radio" name="contexto" value="catedra">
+              <span>Cátedra universitaria</span>
+            </label>
+            <label class="opcion">
+              <input type="radio" name="contexto" value="rrhh">
+              <span>Entrevista técnica de RRHH</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="campo">
+          <label for="codigo-evaluado">Código del evaluado</label>
+          <input
+            type="text"
+            id="codigo-evaluado"
+            name="codigo"
+            placeholder="Por ejemplo: A7K2"
+            autocomplete="off"
+            autocapitalize="characters"
+            maxlength="12"
+          >
+          <p class="ayuda">
+            Solo letras y números (3 a 12 caracteres). Nunca ingreses nombre, RUT ni contacto.
+          </p>
         </div>
-      </fieldset>
 
-      <div class="campo">
-        <label for="codigo-evaluado">Código del evaluado</label>
-        <input
-          type="text"
-          id="codigo-evaluado"
-          name="codigo"
-          placeholder="Por ejemplo: A7K2"
-          autocomplete="off"
-          autocapitalize="characters"
-          maxlength="12"
-        >
-        <p class="ayuda">
-          Solo letras y números (3 a 12 caracteres). Nunca ingreses nombre, RUT ni contacto.
-        </p>
+        <button type="submit" id="boton-crear" class="boton-principal" disabled>
+          Crear sesión
+        </button>
+      </form>
+    </section>
+
+    <!-- Pantalla 2: Sesión en curso (RF-04, RF-05; RN3) -->
+    <section id="pantalla-sesion" class="oculto">
+      <h1>PEH Toolkit</h1>
+      <p class="subtitulo" id="sesion-info"></p>
+
+      <div id="lista-criterios"></div>
+
+      <p id="estado-veredicto" class="tarjeta mensaje" role="status"></p>
+
+      <p class="ayuda">
+        Atajos de teclado: 1 a 4 marcan «cumple» en C1 a C4; con Shift marcan «no cumple».
+      </p>
+
+      <div class="acciones-sesion">
+        <button type="button" id="boton-pausar" disabled title="Se implementa más adelante">
+          Pausar
+        </button>
+        <button type="button" id="boton-cerrar" disabled title="Se implementa en el siguiente paso">
+          Cerrar sesión
+        </button>
       </div>
 
-      <button type="submit" id="boton-crear" class="boton-principal" disabled>
-        Crear sesión
+      <button type="button" id="boton-descartar" class="enlace-descartar">
+        Descartar esta sesión (provisional, para pruebas)
       </button>
-    </form>
+    </section>
 
-    <p id="mensaje" class="tarjeta mensaje oculto" role="status"></p>
   </main>
 
   <script type="module" src="js/app.js"></script>

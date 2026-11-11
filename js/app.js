@@ -1,40 +1,39 @@
 // app.js — punto de entrada: navegación entre pantallas.
-// Por ahora solo maneja la pantalla «Crear sesión» (RF-01), sin guardar datos.
 
-const CODIGO_VALIDO = /^[A-Za-z0-9]{3,12}$/;
+import { obtenerSesionActiva } from './almacen.js';
+import { iniciarCrearSesion } from './pantallas/crear-sesion.js';
+import { iniciarPantallaSesion, abrirSesion } from './pantallas/sesion.js';
 
-const formulario = document.querySelector('#form-crear-sesion');
-const campoCodigo = document.querySelector('#codigo-evaluado');
-const botonCrear = document.querySelector('#boton-crear');
-const mensaje = document.querySelector('#mensaje');
-
-const NOMBRES_CONTEXTO = {
-  aula: 'Aula escolar',
-  catedra: 'Cátedra universitaria',
-  rrhh: 'Entrevista técnica de RRHH',
+const pantallas = {
+  crear: document.querySelector('#pantalla-crear'),
+  sesion: document.querySelector('#pantalla-sesion'),
 };
 
-function leerContexto() {
-  const marcado = formulario.querySelector('input[name="contexto"]:checked');
-  return marcado ? marcado.value : null;
+function navegar(nombre) {
+  for (const [clave, seccion] of Object.entries(pantallas)) {
+    seccion.classList.toggle('oculto', clave !== nombre);
+  }
 }
 
-function actualizarEstado() {
-  const codigoOk = CODIGO_VALIDO.test(campoCodigo.value.trim());
-  botonCrear.disabled = !(leerContexto() && codigoOk);
-}
-
-formulario.addEventListener('input', actualizarEstado);
-
-formulario.addEventListener('submit', (evento) => {
-  evento.preventDefault();
-  const contexto = leerContexto();
-  const codigo = campoCodigo.value.trim().toUpperCase();
-  // Todavía sin guardar: solo confirma que la pantalla funciona.
-  mensaje.textContent =
-    `Sesión lista para crear: contexto «${NOMBRES_CONTEXTO[contexto]}», ` +
-    `evaluado ${codigo}. (El guardado local llega en el siguiente paso.)`;
-  mensaje.classList.remove('oculto');
+iniciarCrearSesion({
+  alCrear(sesion) {
+    abrirSesion(sesion);
+    navegar('sesion');
+  },
 });
 
-actualizarEstado();
+iniciarPantallaSesion({
+  alDescartar() {
+    navegar('crear');
+  },
+});
+
+// Si hay una sesión en curso, se retoma al abrir la app: así ninguna marca
+// se pierde por recargar o cerrar el navegador sin querer (RNF-08).
+const sesionActiva = obtenerSesionActiva();
+if (sesionActiva) {
+  abrirSesion(sesionActiva);
+  navegar('sesion');
+} else {
+  navegar('crear');
+}

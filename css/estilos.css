@@ -6,6 +6,8 @@
   --texto: #2b3440;
   --texto-suave: #5c6977;
   --acento: #3b6ea5;
+  --cumple: #2f7d4f;
+  --no-cumple: #b3423a;
   --sombra-clara: #ffffff;
   --sombra-oscura: #c9d1dc;
   --radio: 16px;
@@ -141,6 +143,85 @@ button:disabled {
 .mensaje {
   margin-top: 20px;
   padding: 14px 16px;
+}
+
+/* Pantalla de sesión */
+
+.criterio {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.criterio-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.criterio-codigo {
+  font-weight: 700;
+}
+
+.criterio-nombre {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+}
+
+.criterio-estado {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+
+.botones-marca {
+  display: flex;
+  gap: 10px;
+}
+
+/* Botones 1 y 0: mínimo 44×44 px (RNF-13). */
+.boton-marca {
+  width: 52px;
+  min-height: 48px;
+  background: var(--superficie);
+  color: var(--texto);
+}
+
+.boton-marca[data-valor="1"][aria-pressed="true"] {
+  background: var(--cumple);
+  color: #fff;
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.25);
+}
+
+.boton-marca[data-valor="0"][aria-pressed="true"] {
+  background: var(--no-cumple);
+  color: #fff;
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.25);
+}
+
+.acciones-sesion {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.acciones-sesion button {
+  flex: 1;
+}
+
+.enlace-descartar {
+  display: block;
+  margin: 20px auto 0;
+  background: none;
+  color: var(--texto-suave);
+  text-decoration: underline;
+  box-shadow: none;
+  font-weight: 400;
+  font-size: 0.9rem;
 }
 
 .oculto {
