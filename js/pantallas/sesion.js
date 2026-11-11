@@ -1,10 +1,11 @@
 // pantallas/sesion.js — pantalla de sesión: marcas C1-C4 con botones 1 y 0,
-// corrección mientras la sesión está abierta y estado del veredicto (RF-04,
-// RF-05, RN3). Cada marca se guarda al instante (RNF-08).
-// Pendiente: pregunta sugerida, micro-guías y cierre de sesión.
+// corrección mientras la sesión está abierta, estado del veredicto (RF-04,
+// RF-05, RN3) y cierre con confirmación (CU-07). Cada marca se guarda al
+// instante (RNF-08).
+// Pendiente: pregunta sugerida y micro-guías dentro de la sesión.
 
 import { CRITERIOS, calcularVeredicto } from '../motor.js';
-import { guardarMarca, descartarSesion } from '../almacen.js';
+import { guardarMarca, cerrarSesion, descartarSesion } from '../almacen.js';
 import { NOMBRES_CONTEXTO } from './crear-sesion.js';
 
 export const NOMBRES_CRITERIOS = {
@@ -16,9 +17,11 @@ export const NOMBRES_CRITERIOS = {
 
 let sesion = null;
 let avisarDescarte = () => {};
+let avisarCierre = () => {};
 
-export function iniciarPantallaSesion({ alDescartar }) {
+export function iniciarPantallaSesion({ alDescartar, alCerrar }) {
   avisarDescarte = alDescartar;
+  avisarCierre = alCerrar;
   construirCriterios();
 
   document.querySelector('#lista-criterios').addEventListener('click', (evento) => {
@@ -30,9 +33,15 @@ export function iniciarPantallaSesion({ alDescartar }) {
     marcar(criterio, Number(boton.dataset.valor));
   });
 
-  // Atajos de teclado (RNF-14): 1-4 marcan «cumple», Shift+1-4 «no cumple».
+  // Atajos de teclado (RNF-14): 1-4 marcan «cumple», Shift+1-4 «no cumple»
+  // y C intenta cerrar la sesión.
   document.addEventListener('keydown', (evento) => {
     if (!sesion || pantallaOculta() || evento.target.matches('input, textarea')) {
+      return;
+    }
+    if (evento.code === 'KeyC') {
+      evento.preventDefault();
+      intentarCerrar();
       return;
     }
     const digito = /^(?:Digit|Numpad)([1-4])$/.exec(evento.code);
@@ -42,6 +51,8 @@ export function iniciarPantallaSesion({ alDescartar }) {
     evento.preventDefault();
     marcar(`C${digito[1]}`, evento.shiftKey ? 0 : 1);
   });
+
+  document.querySelector('#boton-cerrar').addEventListener('click', intentarCerrar);
 
   document.querySelector('#boton-descartar').addEventListener('click', () => {
     if (!sesion) {
@@ -69,6 +80,28 @@ function pantallaOculta() {
 function marcar(criterio, valor) {
   sesion = guardarMarca(sesion.id, criterio, valor);
   pintar();
+}
+
+// CU-07: pide confirmar, calcula el veredicto con el motor y guarda la
+// sesión como registro inmutable. Solo procede con los cuatro criterios
+// marcados (RN3): antes de eso el botón está deshabilitado.
+function intentarCerrar() {
+  const resultado = calcularVeredicto(sesion.marcas);
+  if (!resultado.completo) {
+    return;
+  }
+  const seguro = window.confirm(
+    'Se calculará el veredicto y el registro no se podrá modificar. ¿Cerrar la sesión?',
+  );
+  if (!seguro) {
+    return;
+  }
+  const cerrada = cerrarSesion(sesion.id, {
+    peh: resultado.peh,
+    criteriosFallidos: resultado.fallidos,
+  });
+  sesion = null;
+  avisarCierre(cerrada);
 }
 
 function construirCriterios() {
@@ -111,10 +144,12 @@ function pintar() {
   const resultado = calcularVeredicto(sesion.marcas);
   const estado = document.querySelector('#estado-veredicto');
   if (resultado.completo) {
-    estado.textContent =
-      'Los cuatro criterios tienen valor. «Cerrar sesión» calculará el veredicto (siguiente paso).';
+    estado.textContent = 'Los cuatro criterios tienen valor. Puedes cerrar la sesión.';
   } else {
     const plural = resultado.faltan.length > 1 ? 'Faltan' : 'Falta';
     estado.textContent = `Veredicto pendiente. ${plural}: ${resultado.faltan.join(', ')}.`;
   }
+
+  // «Cerrar sesión» se habilita solo con los cuatro criterios marcados (RN3).
+  document.querySelector('#boton-cerrar').disabled = !resultado.completo;
 }

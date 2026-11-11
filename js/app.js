@@ -3,10 +3,12 @@
 import { obtenerSesionActiva } from './almacen.js';
 import { iniciarCrearSesion } from './pantallas/crear-sesion.js';
 import { iniciarPantallaSesion, abrirSesion } from './pantallas/sesion.js';
+import { iniciarPantallaResultado, mostrarResultado } from './pantallas/resultado.js';
 
 const pantallas = {
   crear: document.querySelector('#pantalla-crear'),
   sesion: document.querySelector('#pantalla-sesion'),
+  resultado: document.querySelector('#pantalla-resultado'),
 };
 
 function navegar(nombre) {
@@ -24,6 +26,16 @@ iniciarCrearSesion({
 
 iniciarPantallaSesion({
   alDescartar() {
+    navegar('crear');
+  },
+  alCerrar(sesionCerrada) {
+    mostrarResultado(sesionCerrada);
+    navegar('resultado');
+  },
+});
+
+iniciarPantallaResultado({
+  alNuevaSesion() {
     navegar('crear');
   },
 });

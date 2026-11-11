@@ -76,13 +76,43 @@
         <button type="button" id="boton-pausar" disabled title="Se implementa más adelante">
           Pausar
         </button>
-        <button type="button" id="boton-cerrar" disabled title="Se implementa en el siguiente paso">
+        <button type="button" id="boton-cerrar" disabled>
           Cerrar sesión
         </button>
       </div>
 
       <button type="button" id="boton-descartar" class="enlace-descartar">
         Descartar esta sesión (provisional, para pruebas)
+      </button>
+    </section>
+
+    <!-- Pantalla 3: Resultado de la sesión cerrada (RF-08, CU-09) -->
+    <section id="pantalla-resultado" class="oculto">
+      <h1>PEH Toolkit</h1>
+      <p class="subtitulo" id="resultado-info"></p>
+
+      <div id="veredicto-tarjeta" class="tarjeta veredicto">
+        <span class="veredicto-titulo"></span>
+        <span class="veredicto-detalle"></span>
+      </div>
+
+      <div id="lista-fallidos"></div>
+
+      <p id="resultado-marcas" class="tarjeta mensaje" aria-label="Marcas de la sesión"></p>
+
+      <p class="ayuda">Registro cerrado: no se puede modificar.</p>
+
+      <div class="acciones-sesion">
+        <button type="button" id="boton-exportar-csv" disabled title="Se implementa más adelante">
+          Exportar CSV
+        </button>
+        <button type="button" id="boton-exportar-json" disabled title="Se implementa más adelante">
+          Exportar JSON
+        </button>
+      </div>
+
+      <button type="button" id="boton-nueva-sesion" class="boton-principal">
+        Nueva sesión
       </button>
     </section>
 

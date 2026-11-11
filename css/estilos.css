@@ -203,6 +203,41 @@ button:disabled {
   box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.25);
 }
 
+/* Pantalla de resultado */
+
+.veredicto {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: center;
+  padding: 20px 16px;
+  margin-bottom: 16px;
+}
+
+.veredicto-titulo {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.veredicto-aprobado .veredicto-titulo {
+  color: var(--cumple);
+}
+
+.veredicto-rechazado .veredicto-titulo {
+  color: var(--no-cumple);
+}
+
+.fallido {
+  margin-bottom: 12px;
+  border-left: 6px solid var(--no-cumple);
+}
+
+.microguia {
+  margin: 8px 0 0;
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+}
+
 .acciones-sesion {
   display: flex;
   gap: 12px;
