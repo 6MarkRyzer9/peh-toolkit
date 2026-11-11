@@ -1,0 +1,89 @@
+{
+  "nota": "Preguntas de ejemplo mientras Katalina y Renzo redactan el banco definitivo (36 preguntas: 3 contextos × 4 tipos × 3) y Fabrizzio lo valida.",
+  "preguntas": [
+    {
+      "id": "ej-aula-proceso-1",
+      "contexto": "aula",
+      "tipo": "proceso",
+      "texto": "Cuéntame paso a paso cómo hiciste tu trabajo, desde la idea hasta el resultado.",
+      "activa": true
+    },
+    {
+      "id": "ej-aula-contrafactual-1",
+      "contexto": "aula",
+      "tipo": "contrafactual",
+      "texto": "¿Qué habría pasado con tu resultado si hubieras partido de un dato distinto?",
+      "activa": true
+    },
+    {
+      "id": "ej-aula-justificacion-1",
+      "contexto": "aula",
+      "tipo": "justificacion",
+      "texto": "¿Por qué elegiste ese camino y no otro para resolver el problema?",
+      "activa": true
+    },
+    {
+      "id": "ej-aula-clarificacion-1",
+      "contexto": "aula",
+      "tipo": "clarificacion",
+      "texto": "Usaste la palabra clave de tu trabajo: ¿qué significa, con tus propias palabras?",
+      "activa": true
+    },
+    {
+      "id": "ej-catedra-proceso-1",
+      "contexto": "catedra",
+      "tipo": "proceso",
+      "texto": "Reconstruye el razonamiento que te llevó de tus premisas a tu conclusión principal.",
+      "activa": true
+    },
+    {
+      "id": "ej-catedra-contrafactual-1",
+      "contexto": "catedra",
+      "tipo": "contrafactual",
+      "texto": "¿Qué cambiaría en tu solución si el supuesto principal fuera falso?",
+      "activa": true
+    },
+    {
+      "id": "ej-catedra-justificacion-1",
+      "contexto": "catedra",
+      "tipo": "justificacion",
+      "texto": "¿Qué evidencia respalda la decisión metodológica central de tu trabajo?",
+      "activa": true
+    },
+    {
+      "id": "ej-catedra-clarificacion-1",
+      "contexto": "catedra",
+      "tipo": "clarificacion",
+      "texto": "Define con tus palabras el concepto central de tu marco teórico.",
+      "activa": true
+    },
+    {
+      "id": "ej-rrhh-proceso-1",
+      "contexto": "rrhh",
+      "tipo": "proceso",
+      "texto": "Describe cómo abordarías este problema desde cero: ¿cuál sería tu primer paso y por qué?",
+      "activa": true
+    },
+    {
+      "id": "ej-rrhh-contrafactual-1",
+      "contexto": "rrhh",
+      "tipo": "contrafactual",
+      "texto": "Si el requisito principal del cliente cambiara a última hora, ¿qué parte de tu solución se vería afectada?",
+      "activa": true
+    },
+    {
+      "id": "ej-rrhh-justificacion-1",
+      "contexto": "rrhh",
+      "tipo": "justificacion",
+      "texto": "¿Por qué esa tecnología es la adecuada para este caso y qué alternativas descartaste?",
+      "activa": true
+    },
+    {
+      "id": "ej-rrhh-clarificacion-1",
+      "contexto": "rrhh",
+      "tipo": "clarificacion",
+      "texto": "Mencionaste un término técnico: explícalo como se lo explicarías a alguien no técnico.",
+      "activa": true
+    }
+  ]
+}

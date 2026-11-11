@@ -1,0 +1,148 @@
+/* PEH Toolkit — estilos base, móvil primero (desde 360 px, RNF-10). */
+
+:root {
+  --fondo: #e8ecf1;
+  --superficie: #f2f5f9;
+  --texto: #2b3440;
+  --texto-suave: #5c6977;
+  --acento: #3b6ea5;
+  --sombra-clara: #ffffff;
+  --sombra-oscura: #c9d1dc;
+  --radio: 16px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--fondo);
+  color: var(--texto);
+  min-height: 100vh;
+}
+
+.pantalla {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin: 0 0 4px;
+}
+
+.subtitulo {
+  color: var(--texto-suave);
+  margin: 0 0 24px;
+  font-size: 0.95rem;
+}
+
+.campo {
+  margin-bottom: 20px;
+}
+
+.campo > label,
+.campo > .etiqueta {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+/* Tarjetas con relieve suave (base visual Neumorphism del prototipo). */
+.tarjeta {
+  background: var(--superficie);
+  border-radius: var(--radio);
+  box-shadow: 6px 6px 12px var(--sombra-oscura), -6px -6px 12px var(--sombra-clara);
+  padding: 16px;
+}
+
+/* Opciones de contexto: botones de radio grandes (mínimo 44×44 px, RNF-13). */
+.opciones-contexto {
+  display: grid;
+  gap: 12px;
+}
+
+.opcion {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 8px 16px;
+  background: var(--superficie);
+  border-radius: var(--radio);
+  box-shadow: 4px 4px 8px var(--sombra-oscura), -4px -4px 8px var(--sombra-clara);
+  cursor: pointer;
+}
+
+.opcion input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--acento);
+}
+
+.opcion:has(input:checked) {
+  box-shadow: inset 4px 4px 8px var(--sombra-oscura), inset -4px -4px 8px var(--sombra-clara);
+  outline: 2px solid var(--acento);
+}
+
+input[type="text"] {
+  width: 100%;
+  min-height: 48px;
+  padding: 8px 14px;
+  font-size: 1.1rem;
+  color: var(--texto);
+  background: var(--superficie);
+  border: none;
+  border-radius: var(--radio);
+  box-shadow: inset 4px 4px 8px var(--sombra-oscura), inset -4px -4px 8px var(--sombra-clara);
+}
+
+input[type="text"]:focus-visible,
+.opcion:has(input:focus-visible),
+button:focus-visible {
+  outline: 3px solid var(--acento);
+  outline-offset: 2px;
+}
+
+.ayuda {
+  color: var(--texto-suave);
+  font-size: 0.85rem;
+  margin: 6px 0 0;
+}
+
+button {
+  min-height: 48px;
+  min-width: 44px;
+  padding: 10px 20px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radio);
+  cursor: pointer;
+  background: var(--acento);
+  color: #fff;
+  box-shadow: 4px 4px 8px var(--sombra-oscura), -4px -4px 8px var(--sombra-clara);
+}
+
+button:disabled {
+  background: var(--superficie);
+  color: var(--texto-suave);
+  cursor: not-allowed;
+}
+
+.boton-principal {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.mensaje {
+  margin-top: 20px;
+  padding: 14px 16px;
+}
+
+.oculto {
+  display: none;
+}

@@ -1,0 +1,10 @@
+# Notas personales que no van al repositorio
+PROMPT_INICIO.txt
+
+# Archivos del sistema operativo
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Dependencias (el proyecto no debería tenerlas)
+node_modules/

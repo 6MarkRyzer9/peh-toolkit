@@ -1,0 +1,10 @@
+{
+  "name": "PEH Toolkit",
+  "short_name": "PEH",
+  "description": "Asistente para evaluar defensas orales con el Protocolo de Explicabilidad Humana (C1–C4).",
+  "lang": "es",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#e8ecf1",
+  "theme_color": "#3b6ea5"
+}

@@ -1,0 +1,25 @@
+{
+  "nota": "Micro-guías iniciales de la presentación del Hito 1; el cliente puede ajustarlas.",
+  "criterios": {
+    "C1": {
+      "nombre": "Apropiación del Lenguaje",
+      "cumple": "Traduce los conceptos a palabras propias.",
+      "noCumple": "Repite mecánicamente la formulación recibida."
+    },
+    "C2": {
+      "nombre": "Reconstrucción Lógica",
+      "cumple": "Explica causalmente premisas y conclusiones.",
+      "noCumple": "Exhibe saltos lógicos ciegos entre ambas."
+    },
+    "C3": {
+      "nombre": "Adecuación Disciplinar",
+      "cumple": "Su justificación calza con el consenso de la disciplina.",
+      "noCumple": "Usa premisas falsas o metodologías inventadas."
+    },
+    "C4": {
+      "nombre": "Responsabilidad Agéntica",
+      "cumple": "Defiende su producto y asume autoría y límites.",
+      "noCumple": "Evade la responsabilidad delegando en la IA."
+    }
+  }
+}
