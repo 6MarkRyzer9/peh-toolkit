@@ -15,6 +15,7 @@
 - Cierre de sesión (CU-07): confirmación «no se podrá modificar», veredicto calculado con el motor, registro inmutable guardado.
 - Pregunta sugerida en la sesión (RF-02, RF-03): preguntas del contexto desde `data/banco.json`, «Otra» pasa a la siguiente, «Editar» y «Agregar» usan la pregunta solo en esa sesión sin tocar el banco (RN7) ni las marcas (verificado: editar con C1 marcado conserva la marca).
 - Micro-guías en la sesión (RF-06, CU-05): botón «?» en cada criterio que abre las condiciones de 1 y 0 dentro de la misma tarjeta, sin tapar los botones de marca; se puede marcar con el panel abierto (verificado en el navegador).
+- Exportación (RF-11): `js/exportar.js` genera CSV (UTF-8 con BOM, separador «;», fechas ISO 8601, una fila por sesión con los campos de la tabla 1) y JSON con los mismos campos; 5 pruebas propias. Botones habilitados en la pantalla de resultado (verificado en el navegador con una sesión real).
 - Pantalla de resultado (`js/pantallas/resultado.js`): veredicto PEH, criterio(s) fallido(s) con su micro-guía cargada desde `data/microguias.json` (CU-09), las cuatro marcas y «Nueva sesión». Verificada en el navegador: cerrar con C3=0 muestra «Falló: C3» con la micro-guía, y al recargar la app vuelve a «Crear sesión» con el registro cerrado intacto.
 - `data/banco.json` con 12 preguntas de ejemplo y `data/microguias.json` con las micro-guías del Hito 1.
 - GitHub Pages activado desde `main`: <https://6markryzer9.github.io/peh-toolkit/>.
@@ -22,7 +23,7 @@
 ## Pendiente
 
 - Elegir el tipo Lipman al agregar una pregunta (opcional según CU-03).
-- Historial con filtros, exportar CSV/JSON (los botones de la pantalla de resultado existen pero están deshabilitados).
+- Historial con filtros por fecha, contexto y código, con exportación de varias sesiones (RF-10; `exportar.js` ya acepta listas).
 - El botón provisional «Descartar» de la pantalla de sesión se mantiene para que el equipo pruebe sin llenar el historial de sesiones basura; se quitará antes de la 1.0 (o se reemplazará por «Pausar»).
 - PWA real (`service-worker.js` aún es un esqueleto sin registrar).
 - Pantalla «Acerca de» con la atribución (RNF-05).
@@ -31,4 +32,4 @@
 
 ## Siguiente paso
 
-Exportación CSV y JSON (RF-11): implementar `js/exportar.js` (CSV en UTF-8 con BOM y separador «;», fechas ISO 8601, una fila por sesión) y habilitar los botones de la pantalla de resultado. Después: historial con filtros.
+Historial de sesiones cerradas (RF-10): pantalla con la lista, filtros por fecha, contexto y código, y exportación de las sesiones filtradas a CSV/JSON reutilizando `exportar.js`. Después: PWA y pantalla «Acerca de».

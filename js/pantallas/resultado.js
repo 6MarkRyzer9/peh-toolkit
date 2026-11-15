@@ -1,17 +1,42 @@
 // pantallas/resultado.js — pantalla de resultado: veredicto, criterio o
-// criterios fallidos con su micro-guía y las cuatro marcas (RF-08, CU-09).
-// Pendiente: exportar CSV y JSON (RF-11).
+// criterios fallidos con su micro-guía, las cuatro marcas y exportación a
+// CSV y JSON (RF-08, RF-11, CU-09).
 
 import { CRITERIOS } from '../motor.js';
 import { cargarMicroguias } from '../banco.js';
+import { generarCsv, generarJson, descargarArchivo } from '../exportar.js';
 import { NOMBRES_CONTEXTO } from './crear-sesion.js';
 import { NOMBRES_CRITERIOS } from './sesion.js';
 
+let sesionMostrada = null;
+
 export function iniciarPantallaResultado({ alNuevaSesion }) {
   document.querySelector('#boton-nueva-sesion').addEventListener('click', alNuevaSesion);
+
+  document.querySelector('#boton-exportar-csv').addEventListener('click', () => {
+    descargarArchivo(
+      nombreArchivo('csv'),
+      generarCsv([sesionMostrada]),
+      'text/csv;charset=utf-8',
+    );
+  });
+
+  document.querySelector('#boton-exportar-json').addEventListener('click', () => {
+    descargarArchivo(
+      nombreArchivo('json'),
+      generarJson([sesionMostrada]),
+      'application/json;charset=utf-8',
+    );
+  });
+}
+
+function nombreArchivo(extension) {
+  const fecha = sesionMostrada.fechaCierre.slice(0, 10);
+  return `peh-sesion-${sesionMostrada.codigoEvaluado}-${fecha}.${extension}`;
 }
 
 export async function mostrarResultado(sesion) {
+  sesionMostrada = sesion;
   const fecha = new Date(sesion.fechaCierre).toLocaleString('es-CL', {
     dateStyle: 'short',
     timeStyle: 'short',
