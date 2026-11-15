@@ -8,7 +8,7 @@
 
 import { CRITERIOS, calcularVeredicto } from '../motor.js';
 import { guardarMarca, cerrarSesion, descartarSesion } from '../almacen.js';
-import { cargarPreguntas, TIPOS_LIPMAN } from '../banco.js';
+import { cargarPreguntas, cargarMicroguias, TIPOS_LIPMAN } from '../banco.js';
 import { NOMBRES_CONTEXTO } from './crear-sesion.js';
 
 export const NOMBRES_CRITERIOS = {
@@ -29,6 +29,7 @@ let indicePregunta = 0;
 let textoPersonalizado = null;
 let preguntaAgregada = false;
 let modoEditor = null; // 'editar' | 'agregar' | null
+let microguias = null; // micro-guías de los criterios (RF-06)
 
 export function iniciarPantallaSesion({ alDescartar, alCerrar }) {
   avisarDescarte = alDescartar;
@@ -36,13 +37,27 @@ export function iniciarPantallaSesion({ alDescartar, alCerrar }) {
   construirCriterios();
 
   document.querySelector('#lista-criterios').addEventListener('click', (evento) => {
-    const boton = evento.target.closest('.boton-marca');
-    if (!boton || !sesion) {
+    if (!sesion) {
       return;
     }
-    const criterio = boton.closest('.criterio').dataset.criterio;
-    marcar(criterio, Number(boton.dataset.valor));
+    const criterio = evento.target.closest('.criterio')?.dataset.criterio;
+    const botonGuia = evento.target.closest('.boton-guia');
+    if (botonGuia) {
+      alternarGuia(criterio, botonGuia);
+      return;
+    }
+    const botonMarca = evento.target.closest('.boton-marca');
+    if (botonMarca) {
+      marcar(criterio, Number(botonMarca.dataset.valor));
+    }
   });
+
+  // Las micro-guías se cargan una vez al entrar a la pantalla (RF-06).
+  cargarMicroguias()
+    .then((guias) => {
+      microguias = guias;
+    })
+    .catch((error) => console.warn(error));
 
   // Atajos de teclado (RNF-14): 1-4 marcan «cumple», Shift+1-4 «no cumple»
   // y C intenta cerrar la sesión.
@@ -202,19 +217,40 @@ function construirCriterios() {
   contenedor.innerHTML = CRITERIOS.map(
     (criterio) => `
     <div class="tarjeta criterio" data-criterio="${criterio}">
-      <div class="criterio-info">
-        <span class="criterio-codigo">${criterio}</span>
-        <span class="criterio-nombre">${NOMBRES_CRITERIOS[criterio]}</span>
-        <span class="criterio-estado" data-estado>sin evaluar</span>
+      <div class="criterio-fila">
+        <div class="criterio-info">
+          <span class="criterio-codigo">${criterio}</span>
+          <span class="criterio-nombre">${NOMBRES_CRITERIOS[criterio]}</span>
+          <span class="criterio-estado" data-estado>sin evaluar</span>
+        </div>
+        <div class="botones-marca" role="group" aria-label="Marca de ${criterio}">
+          <button type="button" class="boton-guia boton-suave" aria-expanded="false"
+            aria-controls="guia-${criterio}" aria-label="Micro-guía de ${criterio}">?</button>
+          <button type="button" class="boton-marca" data-valor="1"
+            aria-pressed="false" aria-label="${criterio} cumple">1</button>
+          <button type="button" class="boton-marca" data-valor="0"
+            aria-pressed="false" aria-label="${criterio} no cumple">0</button>
+        </div>
       </div>
-      <div class="botones-marca" role="group" aria-label="Marca de ${criterio}">
-        <button type="button" class="boton-marca" data-valor="1"
-          aria-pressed="false" aria-label="${criterio} cumple">1</button>
-        <button type="button" class="boton-marca" data-valor="0"
-          aria-pressed="false" aria-label="${criterio} no cumple">0</button>
-      </div>
+      <div class="microguia-panel oculto" id="guia-${criterio}"></div>
     </div>`,
   ).join('');
+}
+
+// Muestra u oculta la micro-guía del criterio sin tapar los botones de
+// marca (CU-05): el panel se abre dentro de la misma tarjeta.
+function alternarGuia(criterio, boton) {
+  const panel = document.querySelector(`#guia-${criterio}`);
+  const abrir = panel.classList.contains('oculto');
+  if (abrir && panel.childElementCount === 0) {
+    const guia = microguias?.[criterio];
+    panel.innerHTML = guia
+      ? `<p><strong>Vale 1:</strong> ${guia.cumple}</p>
+         <p><strong>Vale 0:</strong> ${guia.noCumple}</p>`
+      : '<p>Micro-guía no disponible.</p>';
+  }
+  panel.classList.toggle('oculto', !abrir);
+  boton.setAttribute('aria-expanded', String(abrir));
 }
 
 function pintar() {
