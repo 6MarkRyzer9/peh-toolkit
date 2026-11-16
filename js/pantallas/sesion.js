@@ -3,11 +3,11 @@
 // RF-05, RN3) y cierre con confirmación (CU-07). Cada marca se guarda al
 // instante (RNF-08). Incluye la pregunta sugerida con «Otra», «Editar» y
 // «Agregar» (RF-02, RF-03): ediciones solo para la sesión, sin tocar el
-// banco (RN7).
-// Pendiente: micro-guías con el botón «?» dentro de la sesión (RF-06).
+// banco (RN7), las micro-guías con el botón «?» (RF-06) y «Pausar» para
+// retomar la sesión más tarde desde la pantalla «Crear sesión».
 
 import { CRITERIOS, calcularVeredicto } from '../motor.js';
-import { guardarMarca, cerrarSesion, descartarSesion } from '../almacen.js';
+import { guardarMarca, cerrarSesion, pausarSesion } from '../almacen.js';
 import { cargarPreguntas, cargarMicroguias, TIPOS_LIPMAN } from '../banco.js';
 import { NOMBRES_CONTEXTO } from './crear-sesion.js';
 
@@ -19,7 +19,7 @@ export const NOMBRES_CRITERIOS = {
 };
 
 let sesion = null;
-let avisarDescarte = () => {};
+let avisarPausa = () => {};
 let avisarCierre = () => {};
 
 // Estado de la pregunta sugerida. Vive solo en memoria: la sesión no guarda
@@ -31,8 +31,8 @@ let preguntaAgregada = false;
 let modoEditor = null; // 'editar' | 'agregar' | null
 let microguias = null; // micro-guías de los criterios (RF-06)
 
-export function iniciarPantallaSesion({ alDescartar, alCerrar }) {
-  avisarDescarte = alDescartar;
+export function iniciarPantallaSesion({ alPausar, alCerrar }) {
+  avisarPausa = alPausar;
   avisarCierre = alCerrar;
   construirCriterios();
 
@@ -112,17 +112,15 @@ export function iniciarPantallaSesion({ alDescartar, alCerrar }) {
 
   document.querySelector('#boton-cancelar-edicion').addEventListener('click', cerrarEditor);
 
-  document.querySelector('#boton-descartar').addEventListener('click', () => {
+  // Pausar guarda la sesión tal como va para retomarla después. Es
+  // reversible, así que no pide confirmación.
+  document.querySelector('#boton-pausar').addEventListener('click', () => {
     if (!sesion) {
       return;
     }
-    const seguro = window.confirm('¿Descartar esta sesión y todas sus marcas?');
-    if (!seguro) {
-      return;
-    }
-    descartarSesion(sesion.id);
+    pausarSesion(sesion.id);
     sesion = null;
-    avisarDescarte();
+    avisarPausa();
   });
 }
 

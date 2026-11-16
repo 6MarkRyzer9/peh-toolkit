@@ -1,7 +1,7 @@
 // app.js — punto de entrada: navegación entre pantallas.
 
 import { obtenerSesionActiva } from './almacen.js';
-import { iniciarCrearSesion } from './pantallas/crear-sesion.js';
+import { iniciarCrearSesion, abrirCrearSesion } from './pantallas/crear-sesion.js';
 import { iniciarPantallaSesion, abrirSesion } from './pantallas/sesion.js';
 import { iniciarPantallaResultado, mostrarResultado } from './pantallas/resultado.js';
 import { iniciarPantallaHistorial, abrirHistorial } from './pantallas/historial.js';
@@ -21,16 +21,27 @@ function navegar(nombre) {
   }
 }
 
+// Volver a «Crear sesión» siempre pasa por aquí, para que la lista de
+// sesiones pausadas se repinte al día.
+function irACrear() {
+  abrirCrearSesion();
+  navegar('crear');
+}
+
 iniciarCrearSesion({
   alCrear(sesion) {
+    abrirSesion(sesion);
+    navegar('sesion');
+  },
+  alRetomar(sesion) {
     abrirSesion(sesion);
     navegar('sesion');
   },
 });
 
 iniciarPantallaSesion({
-  alDescartar() {
-    navegar('crear');
+  alPausar() {
+    irACrear();
   },
   alCerrar(sesionCerrada) {
     mostrarResultado(sesionCerrada);
@@ -40,19 +51,19 @@ iniciarPantallaSesion({
 
 iniciarPantallaResultado({
   alNuevaSesion() {
-    navegar('crear');
+    irACrear();
   },
 });
 
 iniciarPantallaHistorial({
   alVolver() {
-    navegar('crear');
+    irACrear();
   },
 });
 
 iniciarPantallaAcerca({
   alVolver() {
-    navegar('crear');
+    irACrear();
   },
 });
 
@@ -72,7 +83,7 @@ if (sesionActiva) {
   abrirSesion(sesionActiva);
   navegar('sesion');
 } else {
-  navegar('crear');
+  irACrear();
 }
 
 // PWA: el service worker guarda una copia de la app para funcionar sin

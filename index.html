@@ -58,6 +58,9 @@
         </button>
       </form>
 
+      <!-- Sesiones pausadas que se pueden retomar o descartar -->
+      <div id="lista-pausadas"></div>
+
       <button type="button" id="boton-ver-historial" class="boton-enlace">
         Ver historial de sesiones
       </button>
@@ -105,17 +108,13 @@
       </p>
 
       <div class="acciones-sesion">
-        <button type="button" id="boton-pausar" disabled title="Se implementa más adelante">
+        <button type="button" id="boton-pausar" class="boton-suave">
           Pausar
         </button>
         <button type="button" id="boton-cerrar" disabled>
           Cerrar sesión
         </button>
       </div>
-
-      <button type="button" id="boton-descartar" class="enlace-descartar">
-        Descartar esta sesión (provisional, para pruebas)
-      </button>
     </section>
 
     <!-- Pantalla 3: Resultado de la sesión cerrada (RF-08, CU-09) -->

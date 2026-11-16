@@ -394,6 +394,27 @@ textarea:focus-visible {
   background: var(--no-cumple);
 }
 
+/* Sesiones en pausa (pantalla «Crear sesión») */
+
+.titulo-pausadas {
+  font-size: 1.05rem;
+  margin: 28px 0 12px;
+}
+
+.pausada-acciones {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.enlace-en-tarjeta {
+  margin: 0;
+  min-height: 44px;
+  padding: 4px 8px;
+}
+
 /* Pantalla «Acerca de» */
 
 .acerca {

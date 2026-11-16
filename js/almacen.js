@@ -98,8 +98,44 @@ export function guardarMarca(idSesion, criterio, valor) {
     throw new Error('La sesión está cerrada y no se puede modificar (RN4)');
   }
 
+  if (sesion.estado !== 'abierta') {
+    throw new Error('Las marcas se corrigen solo con la sesión abierta: retómala primero');
+  }
+
   sesion.marcas[criterio] = valor;
   escribirSesiones(sesiones);
+  return copiar(sesion);
+}
+
+// Pausa una sesión abierta para retomarla después. Deja de ser la sesión
+// en curso, así que al recargar la app se vuelve a «Crear sesión».
+export function pausarSesion(idSesion) {
+  const sesiones = leerSesiones();
+  const sesion = buscarSesion(sesiones, idSesion);
+  if (sesion.estado !== 'abierta') {
+    throw new Error('Solo se puede pausar una sesión abierta');
+  }
+
+  sesion.estado = 'pausada';
+  escribirSesiones(sesiones);
+  if (almacenamiento.getItem(CLAVE_ACTIVA) === idSesion) {
+    almacenamiento.removeItem(CLAVE_ACTIVA);
+  }
+  return copiar(sesion);
+}
+
+// Retoma una sesión pausada: vuelve a estar abierta y en curso,
+// con todas sus marcas tal como quedaron.
+export function retomarSesion(idSesion) {
+  const sesiones = leerSesiones();
+  const sesion = buscarSesion(sesiones, idSesion);
+  if (sesion.estado !== 'pausada') {
+    throw new Error('Solo se puede retomar una sesión pausada');
+  }
+
+  sesion.estado = 'abierta';
+  escribirSesiones(sesiones);
+  almacenamiento.setItem(CLAVE_ACTIVA, sesion.id);
   return copiar(sesion);
 }
 
@@ -126,7 +162,7 @@ export function cerrarSesion(idSesion, { peh, criteriosFallidos }) {
   return copiar(sesion);
 }
 
-// Provisional para el desarrollo: elimina una sesión que sigue abierta.
+// Elimina una sesión abierta o pausada que no se va a evaluar.
 // Una sesión cerrada nunca se descarta (RN4).
 export function descartarSesion(idSesion) {
   const sesiones = leerSesiones();

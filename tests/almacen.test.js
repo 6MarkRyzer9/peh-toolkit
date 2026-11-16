@@ -9,6 +9,8 @@ import {
   obtenerSesionActiva,
   guardarMarca,
   cerrarSesion,
+  pausarSesion,
+  retomarSesion,
   descartarSesion,
   listarSesiones,
   filtrarHistorial,
@@ -112,6 +114,61 @@ test('una sesión cerrada es inmutable (RN4)', () => {
   assert.throws(() => guardarMarca(id, 'C1', 0), /RN4/);
   assert.throws(() => cerrarSesion(id, { peh: 1, criteriosFallidos: [] }), /RN4/);
   assert.throws(() => descartarSesion(id), /RN4/);
+});
+
+test('pausarSesion conserva las marcas y la sesión deja de estar en curso', () => {
+  const { id } = crearSesion({ contexto: 'aula', codigoEvaluado: 'B1Z9' });
+  guardarMarca(id, 'C1', 1);
+
+  const pausada = pausarSesion(id);
+
+  assert.equal(pausada.estado, 'pausada');
+  assert.equal(pausada.marcas.C1, 1);
+  // Al recargar la app no se retoma sola: se vuelve a «Crear sesión».
+  assert.equal(obtenerSesionActiva(), null);
+});
+
+test('retomarSesion reabre la sesión pausada y vuelve a estar en curso', () => {
+  const { id } = crearSesion({ contexto: 'rrhh', codigoEvaluado: 'XK21' });
+  guardarMarca(id, 'C2', 0);
+  pausarSesion(id);
+
+  const retomada = retomarSesion(id);
+
+  assert.equal(retomada.estado, 'abierta');
+  assert.equal(retomada.marcas.C2, 0);
+  assert.equal(obtenerSesionActiva().id, id);
+});
+
+test('una sesión pausada no se marca ni se pausa de nuevo; retomar exige pausada', () => {
+  const { id } = crearSesion({ contexto: 'aula', codigoEvaluado: 'B1Z9' });
+  pausarSesion(id);
+
+  assert.throws(() => guardarMarca(id, 'C1', 1), /retómala/);
+  assert.throws(() => pausarSesion(id), /abierta/);
+
+  retomarSesion(id);
+  assert.throws(() => retomarSesion(id), /pausada/);
+});
+
+test('una sesión cerrada no se puede pausar ni retomar', () => {
+  const { id } = crearSesion({ contexto: 'aula', codigoEvaluado: 'B1Z9' });
+  for (const criterio of ['C1', 'C2', 'C3', 'C4']) {
+    guardarMarca(id, criterio, 1);
+  }
+  cerrarSesion(id, { peh: 1, criteriosFallidos: [] });
+
+  assert.throws(() => pausarSesion(id), /abierta/);
+  assert.throws(() => retomarSesion(id), /pausada/);
+});
+
+test('descartarSesion también elimina una sesión pausada', () => {
+  const { id } = crearSesion({ contexto: 'catedra', codigoEvaluado: 'A7K2' });
+  pausarSesion(id);
+
+  descartarSesion(id);
+
+  assert.equal(listarSesiones().length, 0);
 });
 
 test('descartarSesion elimina una sesión abierta y deja de estar activa', () => {
