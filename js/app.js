@@ -74,3 +74,10 @@ if (sesionActiva) {
 } else {
   navegar('crear');
 }
+
+// PWA: el service worker guarda una copia de la app para funcionar sin
+// internet (RNF-06, RNF-08). Si el navegador no lo soporta o el registro
+// falla, la app sigue funcionando igual, solo que necesita conexión.
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+}

@@ -1,6 +1,6 @@
 # Progreso del PEH Toolkit
 
-Última actualización: 15 de noviembre de 2026.
+Última actualización: 16 de noviembre de 2026.
 
 ## Hecho
 
@@ -21,10 +21,10 @@
 - Pantalla «Acerca de» (RNF-05): qué es la app, autoría del protocolo (Fabrizzio Fatoruzzo), equipo, licencia MIT y enlace al código fuente. Contenido estático en `index.html`; `js/pantallas/acerca.js` solo conecta el botón de volver. Verificada en el navegador a 375 px, sin desplazamiento horizontal.
 - `data/banco.json` con 12 preguntas de ejemplo y `data/microguias.json` con las micro-guías del Hito 1.
 - GitHub Pages activado desde `main`: <https://6markryzer9.github.io/peh-toolkit/>.
+- PWA (RNF-06, RNF-08): `service-worker.js` implementado y registrado desde `app.js`. Estrategia «primero la red, si falla la caché»: con internet la app siempre está al día; sin internet funciona completa con la última versión descargada. Ícono en `iconos/icono.svg` y manifest con ícono para poder instalarla. Verificado en el navegador: con el servidor apagado la app carga entera y se puede crear una sesión.
 
 ## Pendiente
 
-- PWA real: implementar y registrar `service-worker.js` para funcionar sin internet (RNF-06, RNF-08; hoy es un esqueleto sin registrar).
 - Elegir el tipo Lipman al agregar una pregunta (opcional según CU-03).
 - El botón provisional «Descartar» de la pantalla de sesión se mantiene para que el equipo pruebe sin llenar el historial de sesiones basura; se quitará antes de la 1.0 (o se reemplazará por «Pausar»).
 - Banco definitivo de 36 preguntas (Katalina y Renzo; valida Fabrizzio).
@@ -32,6 +32,6 @@
 
 ## Siguiente paso
 
-PWA (`service-worker.js` con caché de la aplicación para funcionar sin internet, RNF-06 y RNF-08). Con eso queda cubierto todo lo Must y Should de la semana 2.
+Con la PWA queda cubierto todo lo Must y Should de la semana 2. Empieza la semana de correcciones: quitar o reemplazar el botón provisional «Descartar» (idealmente por «Pausar», que es Could), integrar el banco definitivo de 36 preguntas cuando esté listo, y el README final.
 
-Nota técnica: durante el desarrollo el navegador puede quedarse con módulos JS en caché y mostrar un error tipo «does not provide an export named …»; se resuelve recargando con Ctrl+Shift+R. La PWA ordenará esto en producción.
+Nota técnica: durante el desarrollo el navegador puede quedarse con módulos JS en caché y mostrar un error tipo «does not provide an export named …»; se resuelve recargando con Ctrl+Shift+R. El service worker pide los archivos con revalidación («no-cache»), así que en producción esto no debería pasar.

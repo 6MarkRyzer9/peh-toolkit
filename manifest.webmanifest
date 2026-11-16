@@ -6,5 +6,13 @@
   "start_url": ".",
   "display": "standalone",
   "background_color": "#e8ecf1",
-  "theme_color": "#3b6ea5"
+  "theme_color": "#3b6ea5",
+  "icons": [
+    {
+      "src": "iconos/icono.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
 }

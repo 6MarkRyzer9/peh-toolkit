@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Ícono de la PWA: monograma PEH sobre el color de acento de la app. -->
+  <rect width="512" height="512" rx="96" fill="#3b6ea5"/>
+  <text
+    x="256"
+    y="300"
+    text-anchor="middle"
+    font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+    font-size="150"
+    font-weight="700"
+    fill="#ffffff"
+  >PEH</text>
+  <text
+    x="256"
+    y="400"
+    text-anchor="middle"
+    font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+    font-size="64"
+    fill="#c9d9ec"
+  >C1 ∧ C2 ∧ C3 ∧ C4</text>
+</svg>
