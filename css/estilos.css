@@ -394,6 +394,32 @@ textarea:focus-visible {
   background: var(--no-cumple);
 }
 
+/* Pantalla «Acerca de» */
+
+.acerca {
+  margin-bottom: 14px;
+}
+
+.acerca h2 {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+}
+
+.acerca p {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+  color: var(--texto-suave);
+}
+
+.acerca p:last-child {
+  margin-bottom: 0;
+}
+
+.acerca a {
+  color: var(--acento);
+  word-break: break-all;
+}
+
 .oculto {
   display: none;
 }
