@@ -143,3 +143,37 @@ export function descartarSesion(idSesion) {
 export function listarSesiones() {
   return leerSesiones().map(copiar);
 }
+
+// Fecha local (AAAA-MM-DD) de un instante ISO, para que los filtros del
+// historial coincidan con la fecha que la persona ve en pantalla.
+function fechaLocal(iso) {
+  const fecha = new Date(iso);
+  const relleno = (n) => String(n).padStart(2, '0');
+  return `${fecha.getFullYear()}-${relleno(fecha.getMonth() + 1)}-${relleno(fecha.getDate())}`;
+}
+
+// Filtra el historial (RF-10): solo sesiones cerradas, por rango de fechas
+// de cierre (inclusive), contexto exacto y código (contiene, sin distinguir
+// mayúsculas). Función pura: recibe la lista y no toca el almacenamiento.
+export function filtrarHistorial(sesiones, { desde, hasta, contexto, codigo } = {}) {
+  const codigoBuscado = codigo?.trim().toUpperCase() ?? '';
+  return sesiones.filter((sesion) => {
+    if (sesion.estado !== 'cerrada') {
+      return false;
+    }
+    const fecha = fechaLocal(sesion.fechaCierre);
+    if (desde && fecha < desde) {
+      return false;
+    }
+    if (hasta && fecha > hasta) {
+      return false;
+    }
+    if (contexto && sesion.contexto !== contexto) {
+      return false;
+    }
+    if (codigoBuscado && !sesion.codigoEvaluado.includes(codigoBuscado)) {
+      return false;
+    }
+    return true;
+  });
+}

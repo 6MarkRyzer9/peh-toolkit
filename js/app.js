@@ -4,11 +4,13 @@ import { obtenerSesionActiva } from './almacen.js';
 import { iniciarCrearSesion } from './pantallas/crear-sesion.js';
 import { iniciarPantallaSesion, abrirSesion } from './pantallas/sesion.js';
 import { iniciarPantallaResultado, mostrarResultado } from './pantallas/resultado.js';
+import { iniciarPantallaHistorial, abrirHistorial } from './pantallas/historial.js';
 
 const pantallas = {
   crear: document.querySelector('#pantalla-crear'),
   sesion: document.querySelector('#pantalla-sesion'),
   resultado: document.querySelector('#pantalla-resultado'),
+  historial: document.querySelector('#pantalla-historial'),
 };
 
 function navegar(nombre) {
@@ -38,6 +40,17 @@ iniciarPantallaResultado({
   alNuevaSesion() {
     navegar('crear');
   },
+});
+
+iniciarPantallaHistorial({
+  alVolver() {
+    navegar('crear');
+  },
+});
+
+document.querySelector('#boton-ver-historial').addEventListener('click', () => {
+  abrirHistorial();
+  navegar('historial');
 });
 
 // Si hay una sesión en curso, se retoma al abrir la app: así ninguna marca

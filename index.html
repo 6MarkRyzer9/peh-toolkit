@@ -57,6 +57,10 @@
           Crear sesión
         </button>
       </form>
+
+      <button type="button" id="boton-ver-historial" class="boton-enlace">
+        Ver historial de sesiones
+      </button>
     </section>
 
     <!-- Pantalla 2: Sesión en curso (RF-04, RF-05; RN3) -->
@@ -137,6 +141,49 @@
 
       <button type="button" id="boton-nueva-sesion" class="boton-principal">
         Nueva sesión
+      </button>
+    </section>
+
+    <!-- Pantalla 4: Historial de sesiones cerradas (RF-10, RF-11) -->
+    <section id="pantalla-historial" class="oculto">
+      <h1>PEH Toolkit</h1>
+      <p class="subtitulo">Historial de sesiones cerradas</p>
+
+      <form id="filtros-historial" class="tarjeta filtros">
+        <div>
+          <label for="filtro-desde">Desde</label>
+          <input type="date" id="filtro-desde">
+        </div>
+        <div>
+          <label for="filtro-hasta">Hasta</label>
+          <input type="date" id="filtro-hasta">
+        </div>
+        <div>
+          <label for="filtro-contexto">Contexto</label>
+          <select id="filtro-contexto">
+            <option value="">Todos</option>
+            <option value="aula">Aula escolar</option>
+            <option value="catedra">Cátedra universitaria</option>
+            <option value="rrhh">Entrevista técnica de RRHH</option>
+          </select>
+        </div>
+        <div>
+          <label for="filtro-codigo">Código</label>
+          <input type="text" id="filtro-codigo" placeholder="A7K2" autocomplete="off">
+        </div>
+      </form>
+
+      <p id="historial-resumen" class="ayuda" role="status"></p>
+
+      <div id="lista-historial"></div>
+
+      <div class="acciones-sesion">
+        <button type="button" id="boton-historial-csv">Exportar CSV</button>
+        <button type="button" id="boton-historial-json">Exportar JSON</button>
+      </div>
+
+      <button type="button" id="boton-volver-historial" class="boton-enlace">
+        Volver a crear sesión
       </button>
     </section>
 

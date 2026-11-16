@@ -11,6 +11,7 @@ import {
   cerrarSesion,
   descartarSesion,
   listarSesiones,
+  filtrarHistorial,
 } from '../js/almacen.js';
 
 // Imita la interfaz de localStorage que usa almacen.js.
@@ -120,6 +121,58 @@ test('descartarSesion elimina una sesión abierta y deja de estar activa', () =>
 
   assert.equal(obtenerSesionActiva(), null);
   assert.equal(listarSesiones().length, 0);
+});
+
+// Sesiones de ejemplo para los filtros del historial (RF-10).
+// Mediodía UTC para que la fecha local coincida en cualquier zona horaria.
+function sesionCerrada(codigo, contexto, fechaCierre, peh = 1) {
+  return {
+    id: `id-${codigo}-${fechaCierre}`,
+    codigoEvaluado: codigo,
+    contexto,
+    estado: 'cerrada',
+    fechaInicio: `${fechaCierre}T11:50:00.000Z`,
+    fechaCierre: `${fechaCierre}T12:00:00.000Z`,
+    marcas: { C1: 1, C2: 1, C3: peh, C4: 1 },
+    peh,
+    criteriosFallidos: peh === 1 ? [] : ['C3'],
+  };
+}
+
+const HISTORIAL = [
+  sesionCerrada('A7K2', 'catedra', '2026-11-10'),
+  sesionCerrada('B1Z9', 'aula', '2026-11-12', 0),
+  sesionCerrada('XK21', 'rrhh', '2026-11-14'),
+  { ...sesionCerrada('ZZ99', 'aula', '2026-11-14'), estado: 'abierta' },
+];
+
+test('filtrarHistorial solo incluye sesiones cerradas', () => {
+  const resultado = filtrarHistorial(HISTORIAL);
+  assert.deepEqual(resultado.map((s) => s.codigoEvaluado), ['A7K2', 'B1Z9', 'XK21']);
+});
+
+test('filtrarHistorial por rango de fechas de cierre, inclusive', () => {
+  const resultado = filtrarHistorial(HISTORIAL, { desde: '2026-11-12', hasta: '2026-11-14' });
+  assert.deepEqual(resultado.map((s) => s.codigoEvaluado), ['B1Z9', 'XK21']);
+});
+
+test('filtrarHistorial por contexto exacto', () => {
+  const resultado = filtrarHistorial(HISTORIAL, { contexto: 'aula' });
+  assert.deepEqual(resultado.map((s) => s.codigoEvaluado), ['B1Z9']);
+});
+
+test('filtrarHistorial por código: contiene y sin distinguir mayúsculas', () => {
+  const resultado = filtrarHistorial(HISTORIAL, { codigo: ' k2' });
+  assert.deepEqual(resultado.map((s) => s.codigoEvaluado), ['A7K2', 'XK21']);
+});
+
+test('filtrarHistorial combina filtros', () => {
+  const resultado = filtrarHistorial(HISTORIAL, {
+    desde: '2026-11-11',
+    contexto: 'rrhh',
+    codigo: 'XK',
+  });
+  assert.deepEqual(resultado.map((s) => s.codigoEvaluado), ['XK21']);
 });
 
 test('datos corruptos en el almacenamiento no rompen la lectura', () => {

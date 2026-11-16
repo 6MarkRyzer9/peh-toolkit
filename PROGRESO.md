@@ -16,6 +16,7 @@
 - Pregunta sugerida en la sesión (RF-02, RF-03): preguntas del contexto desde `data/banco.json`, «Otra» pasa a la siguiente, «Editar» y «Agregar» usan la pregunta solo en esa sesión sin tocar el banco (RN7) ni las marcas (verificado: editar con C1 marcado conserva la marca).
 - Micro-guías en la sesión (RF-06, CU-05): botón «?» en cada criterio que abre las condiciones de 1 y 0 dentro de la misma tarjeta, sin tapar los botones de marca; se puede marcar con el panel abierto (verificado en el navegador).
 - Exportación (RF-11): `js/exportar.js` genera CSV (UTF-8 con BOM, separador «;», fechas ISO 8601, una fila por sesión con los campos de la tabla 1) y JSON con los mismos campos; 5 pruebas propias. Botones habilitados en la pantalla de resultado (verificado en el navegador con una sesión real).
+- Historial (RF-10): pantalla con las sesiones cerradas (más recientes primero), filtros por rango de fechas de cierre, contexto y código (parcial, sin distinguir mayúsculas) y exportación de lo filtrado a CSV/JSON. El filtro es una función pura en `almacen.js` con 5 pruebas. Verificado en el navegador a 375 px, sin desplazamiento horizontal.
 - Pantalla de resultado (`js/pantallas/resultado.js`): veredicto PEH, criterio(s) fallido(s) con su micro-guía cargada desde `data/microguias.json` (CU-09), las cuatro marcas y «Nueva sesión». Verificada en el navegador: cerrar con C3=0 muestra «Falló: C3» con la micro-guía, y al recargar la app vuelve a «Crear sesión» con el registro cerrado intacto.
 - `data/banco.json` con 12 preguntas de ejemplo y `data/microguias.json` con las micro-guías del Hito 1.
 - GitHub Pages activado desde `main`: <https://6markryzer9.github.io/peh-toolkit/>.
@@ -23,7 +24,8 @@
 ## Pendiente
 
 - Elegir el tipo Lipman al agregar una pregunta (opcional según CU-03).
-- Historial con filtros por fecha, contexto y código, con exportación de varias sesiones (RF-10; `exportar.js` ya acepta listas).
+- PWA real: implementar y registrar `service-worker.js` para funcionar sin internet (RNF-06, RNF-08).
+- Pantalla «Acerca de» con la atribución a Fabrizzio Fatoruzzo (RNF-05).
 - El botón provisional «Descartar» de la pantalla de sesión se mantiene para que el equipo pruebe sin llenar el historial de sesiones basura; se quitará antes de la 1.0 (o se reemplazará por «Pausar»).
 - PWA real (`service-worker.js` aún es un esqueleto sin registrar).
 - Pantalla «Acerca de» con la atribución (RNF-05).
@@ -32,4 +34,6 @@
 
 ## Siguiente paso
 
-Historial de sesiones cerradas (RF-10): pantalla con la lista, filtros por fecha, contexto y código, y exportación de las sesiones filtradas a CSV/JSON reutilizando `exportar.js`. Después: PWA y pantalla «Acerca de».
+Pantalla «Acerca de» (RNF-05: qué es la app, autoría del protocolo, equipo, licencia MIT) y después la PWA (`service-worker.js` con caché de la aplicación para funcionar sin internet). Con eso queda cubierto todo lo Must y Should de la semana 2.
+
+Nota técnica: durante el desarrollo el navegador puede quedarse con módulos JS en caché y mostrar un error tipo «does not provide an export named …»; se resuelve recargando con Ctrl+Shift+R. La PWA ordenará esto en producción.

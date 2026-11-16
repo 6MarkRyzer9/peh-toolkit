@@ -90,11 +90,14 @@ h1 {
   outline: 2px solid var(--acento);
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="date"],
+select {
   width: 100%;
   min-height: 48px;
   padding: 8px 14px;
   font-size: 1.1rem;
+  font-family: inherit;
   color: var(--texto);
   background: var(--superficie);
   border: none;
@@ -103,6 +106,8 @@ input[type="text"] {
 }
 
 input[type="text"]:focus-visible,
+input[type="date"]:focus-visible,
+select:focus-visible,
 .opcion:has(input:focus-visible),
 button:focus-visible {
   outline: 3px solid var(--acento);
@@ -321,7 +326,8 @@ textarea:focus-visible {
   flex: 1;
 }
 
-.enlace-descartar {
+.enlace-descartar,
+.boton-enlace {
   display: block;
   margin: 20px auto 0;
   background: none;
@@ -330,6 +336,62 @@ textarea:focus-visible {
   box-shadow: none;
   font-weight: 400;
   font-size: 0.9rem;
+}
+
+/* Pantalla de historial */
+
+.filtros {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+/* Sin desborde horizontal a 360 px (RNF-10): los campos de fecha tienen un
+   ancho mínimo intrínseco mayor que la columna y hay que anularlo. */
+.filtros > div,
+.filtros input,
+.filtros select {
+  min-width: 0;
+}
+
+.filtros label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.sesion-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.sesion-item-detalle {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+  margin-top: 4px;
+}
+
+.insignia {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+.insignia-1 {
+  background: var(--cumple);
+}
+
+.insignia-0 {
+  background: var(--no-cumple);
 }
 
 .oculto {
