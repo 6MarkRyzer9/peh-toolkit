@@ -21,23 +21,61 @@ El veredicto vale 1 solo si los cuatro criterios valen 1. Un criterio «sin eval
 
 ## Características
 
-- Funciona en el navegador, sin internet y sin servidores: los datos viven solo en el dispositivo del evaluador.
+- Funciona en el navegador, sin internet y sin servidores: los datos viven solo en el dispositivo del evaluador. Se puede instalar como app (PWA).
 - El evaluado se identifica únicamente con un código alfanumérico (sin nombre, RUT ni contacto).
+- Preguntas sugeridas por contexto y tipo Lipman, que se pueden editar o agregar durante la sesión sin tocar el banco.
+- Micro-guía de cada criterio, pausar y retomar sesiones, y cierre con confirmación.
 - Sesiones cerradas inmutables, historial con filtros y exportación a CSV (compatible con Excel) y JSON.
-- Móvil primero (desde 360 px), botones grandes y atajos de teclado.
+- Importación de un banco de preguntas propio desde un archivo JSON.
+- Si el navegador no deja guardar, la app avisa y ofrece un respaldo: nunca pierde la sesión.
+- Diseño inspirado en Liquid Glass de Apple, con modo claro y oscuro. Móvil primero (desde 360 px), botones grandes, atajos de teclado y contraste WCAG AA.
 
 ## Tecnología
 
 HTML, CSS y JavaScript con módulos ES, sin frameworks ni paso de build. Datos en `localStorage`. PWA para uso sin conexión.
 
-## Desarrollo
+## Probar la app
+
+- Versión publicada (GitHub Pages): <https://6markryzer9.github.io/peh-toolkit/>
+- En tu computador, desde la carpeta del proyecto, levanta un servidor estático y abre <http://localhost:8000>:
 
 ```bash
-# Ejecutar las pruebas (Node 18 o superior)
+python -m http.server 8000
+```
+
+Si después de un cambio el navegador muestra una versión vieja, recarga con Ctrl+Shift+R.
+
+## Pruebas
+
+```bash
 node --test
 ```
 
-Para probar la app basta abrir `index.html` con un servidor estático, por ejemplo `npx serve .`.
+Requiere Node 18 o superior y no usa dependencias. Cubren el motor (las 16 combinaciones y los casos «sin evaluar»), el almacenamiento, la exportación y la validación del banco.
+
+## Banco de preguntas
+
+El banco incluido está en `data/banco.json`. Para probar otro banco sin tocar el código, en la app entra a **Banco de preguntas → Importar banco (JSON)**. El archivo debe tener este formato:
+
+```json
+{
+  "preguntas": [
+    {
+      "id": "catedra-contrafactual-1",
+      "contexto": "catedra",
+      "tipo": "contrafactual",
+      "texto": "¿Qué cambiaría en tu solución si el supuesto principal fuera falso?",
+      "activa": true
+    }
+  ]
+}
+```
+
+- `contexto`: `aula`, `catedra` o `rrhh`.
+- `tipo`: `proceso`, `contrafactual`, `justificacion` o `clarificacion`.
+- `id` único; `activa` en `false` oculta la pregunta sin borrarla.
+
+La app revisa el archivo antes de aceptarlo y explica qué corregir. El banco importado queda solo en ese dispositivo. **Descargar banco en uso** entrega una plantilla con el formato correcto.
 
 ## Equipo
 
@@ -46,7 +84,7 @@ Proyecto del ramo Ingeniería de Software, Universidad Alberto Hurtado, 2026.
 
 ## Cómo colaborar (equipo)
 
-1. Clonar el repositorio: `git clone https://github.com/<usuario>/peh-toolkit.git`
+1. Clonar el repositorio: `git clone https://github.com/6MarkRyzer9/peh-toolkit.git`
 2. Crear una rama por tarea: `git checkout -b nombre-de-la-tarea`
 3. Hacer commits pequeños y abrir un *pull request* hacia `main` para que otra persona lo revise.
 4. Antes de subir, correr las pruebas: `node --test`

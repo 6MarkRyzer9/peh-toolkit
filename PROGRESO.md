@@ -1,6 +1,6 @@
 # Progreso del PEH Toolkit
 
-Última actualización: 16 de noviembre de 2026.
+Última actualización: 18 de noviembre de 2026.
 
 ## Hecho
 
@@ -24,15 +24,23 @@
 - Pausar y retomar (Could del plan, adelantado): «Pausar» en la pantalla de sesión guarda la sesión tal como va (sin confirmación, porque es reversible); la pantalla «Crear sesión» lista las sesiones en pausa con código, contexto, fecha de inicio y cuántos criterios llevan marcados, con «Retomar» y «Descartar» (este sí confirma). Al recargar, una sesión pausada no se retoma sola. El botón provisional «Descartar» de la pantalla de sesión se eliminó. En `almacen.js`: `pausarSesion` y `retomarSesion` con 5 pruebas nuevas (35 en total); las marcas solo se corrigen con la sesión abierta.
 - PWA (RNF-06, RNF-08): `service-worker.js` implementado y registrado desde `app.js`. Estrategia «primero la red, si falla la caché»: con internet la app siempre está al día; sin internet funciona completa con la última versión descargada. Ícono en `iconos/icono.svg` y manifest con ícono para poder instalarla. Verificado en el navegador: con el servidor apagado la app carga entera y se puede crear una sesión.
 
+- Tipo Lipman opcional al agregar una pregunta (CU-03, flujo 1a): selector con los cuatro tipos; al editar, la pregunta conserva su tipo. Verificado en el navegador.
+- Almacenamiento lleno o bloqueado (CU-07, flujo 6a): `almacen.js` lanza `ErrorAlmacenamiento` y nunca deja una sesión a medias. Si el cierre no se puede guardar, la sesión sigue abierta y se ofrece descargar un respaldo JSON con las marcas y el veredicto. Crear, marcar, pausar, retomar y descartar avisan en vez de romperse. 4 pruebas nuevas con un almacenamiento que simula estar lleno.
+- Advertencia de respaldo (ERS, sección 2.5): resultado e historial avisan que borrar los datos del navegador pierde las sesiones no exportadas.
+- Importar banco de preguntas (RF-13, Could adelantado): pantalla «Banco de preguntas» con el banco en uso y su resumen por contexto y tipo, importar un JSON con el formato de `data/banco.json` (se revisa pregunta por pregunta y se explican los errores), descargar el banco en uso como plantilla y volver al incluido. El banco importado vive solo en el dispositivo. 10 pruebas nuevas en `tests/banco.test.js` (49 en total). Verificado en el navegador, incluido que el texto del archivo nunca se interpreta como HTML.
+- Rediseño Liquid Glass (decisión del 18 de noviembre, reemplaza Neumorphism): vidrio translúcido sobre fondo de color, modo claro y oscuro, títulos grandes por pantalla, «Volver» arriba, lista agrupada en el inicio, barra flotante con «Pausar» y «Cerrar sesión», control segmentado 1 | 0, ícono nuevo. Colores verificados con contraste AA sobre el vidrio en su peor caso; botones de 44 × 44 px o más; sin desborde a 360 px; atajos y foco de teclado verificados. Con «Reducir transparencia» o sin desenfoque, el vidrio pasa a casi opaco.
+- «Acerca de» corregido: decía «Evaluación de Explicabilidad Humana»; ahora dice «PEH (Protocolo de Explicabilidad Humana)».
+- README actualizado: funciones, cómo probar la app con `python -m http.server` y formato para importar el banco.
+
 ## Pendiente
 
-- Elegir el tipo Lipman al agregar una pregunta (opcional según CU-03).
-- Banco definitivo de 36 preguntas (Katalina y Renzo; valida Fabrizzio).
-- Importar banco, si hay tiempo (Could).
-- README final antes de congelar la 1.0 (29 de noviembre).
+- Banco definitivo de 36 preguntas (Katalina y Renzo; valida Fabrizzio). Se puede probar desde la app con «Importar banco» antes de reemplazar `data/banco.json`.
+- Probar el diseño en celulares reales (Safari en iPhone y Chrome en Android): fluidez del desenfoque y aspecto con «Reducir transparencia» activado, que el navegador integrado no puede simular.
+- Ícono PNG `apple-touch-icon` para que el iPhone muestre el ícono al agregar la app a la pantalla de inicio (Safari no usa el SVG).
+- README final y congelar la 1.0 el 29 de noviembre.
 
 ## Siguiente paso
 
-Semana de correcciones: integrar el banco definitivo de 36 preguntas cuando esté listo, revisar detalles que encuentre el equipo probando la beta, y el README final.
+Que el equipo pruebe la beta en sus celulares y anote detalles. Cuando el banco de 36 preguntas esté listo, importarlo desde la app para revisarlo y, con el visto bueno de Fabrizzio, reemplazar `data/banco.json`.
 
-Nota técnica: durante el desarrollo el navegador puede quedarse con módulos JS en caché y mostrar un error tipo «does not provide an export named …»; se resuelve recargando con Ctrl+Shift+R. El service worker pide los archivos con revalidación («no-cache»), así que en producción esto no debería pasar.
+Nota técnica: la primera vez que se abre la app (cuando el service worker todavía no controla la página), el navegador puede usar módulos JS viejos de su caché y mostrar un error tipo «does not provide an export named …». Se resuelve recargando con Ctrl+Shift+R. Desde la segunda carga, el service worker pide cada archivo con revalidación («no-cache»).

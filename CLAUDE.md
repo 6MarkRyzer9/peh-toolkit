@@ -37,10 +37,11 @@ peh-toolkit/
 │   ├── almacen.js        guardar y leer sesiones
 │   ├── banco.js          cargar preguntas y micro-guías
 │   ├── exportar.js       CSV y JSON
-│   └── pantallas/        crear-sesion.js, sesion.js, resultado.js, historial.js, acerca.js
+│   └── pantallas/        crear-sesion.js, sesion.js, resultado.js, historial.js, acerca.js, banco-preguntas.js
 ├── data/banco.json       preguntas por contexto y tipo Lipman
 ├── data/microguias.json  condiciones de 1 y 0 por criterio
-├── tests/motor.test.js
+├── iconos/icono.svg      ícono de la PWA
+├── tests/                motor, almacen, exportar y banco (*.test.js)
 ├── manifest.webmanifest
 ├── service-worker.js
 ├── docs/                 ERS y plan (no se publican en la app)
@@ -68,12 +69,13 @@ calcularVeredicto(valores)
 - Fechas en ISO 8601. JSON con los mismos campos.
 
 ## Pantallas
-Base visual: el prototipo de Claude Design del equipo, versión móvil (Neumorphism).
+Base visual: estilo Liquid Glass de Apple (vidrio translúcido sobre fondo de color, botones en cápsula, modo claro y oscuro), decidido el 18 de noviembre de 2026; reemplaza la base Neumorphism del prototipo. Todo color de texto nuevo debe pasar contraste AA sobre el vidrio, y con «Reducir transparencia» el vidrio se vuelve casi opaco.
 1. **Crear sesión:** contexto (aula escolar, cátedra universitaria, entrevista técnica de RRHH) y código del evaluado.
 2. **Sesión:** pregunta sugerida con «Otra», «Editar» y «Agregar»; C1 a C4 con botones 1 y 0 y un botón «?» para la micro-guía; estado del veredicto («Pendiente: falta C4»); «Pausar» y «Cerrar sesión».
 3. **Resultado:** veredicto, criterio o criterios fallidos con su micro-guía, las cuatro marcas, «Exportar CSV», «Exportar JSON» y «Nueva sesión».
 4. **Historial:** sesiones cerradas con filtros por fecha, contexto y código; exportar.
 5. **Acerca de:** qué es la app, autor del protocolo (Fabrizzio Fatoruzzo), equipo, licencia MIT.
+6. **Banco de preguntas:** banco en uso con su resumen por contexto y tipo, importar un JSON con el formato de `data/banco.json`, descargar el banco en uso y volver al incluido (RF-13).
 
 Nombres de los criterios: C1 Apropiación del Lenguaje · C2 Reconstrucción Lógica · C3 Adecuación Disciplinar · C4 Responsabilidad Agéntica.
 
