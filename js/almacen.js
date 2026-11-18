@@ -20,6 +20,28 @@ export function usarAlmacenamiento(nuevo) {
   almacenamiento = nuevo;
 }
 
+// Se lanza cuando el navegador no deja guardar (almacenamiento lleno o
+// bloqueado). Como cada cambio reescribe la lista completa, si la escritura
+// falla queda intacto lo que ya estaba guardado: la sesión no se pierde
+// (CU-07, flujo 6a). La pantalla muestra el mensaje y ofrece respaldar.
+export class ErrorAlmacenamiento extends Error {
+  constructor(causa) {
+    super(
+      'No se pudo guardar en este dispositivo: el almacenamiento del navegador está lleno o bloqueado.',
+    );
+    this.name = 'ErrorAlmacenamiento';
+    this.cause = causa;
+  }
+}
+
+function escribir(clave, valor) {
+  try {
+    almacenamiento.setItem(clave, valor);
+  } catch (error) {
+    throw new ErrorAlmacenamiento(error);
+  }
+}
+
 function leerSesiones() {
   try {
     const crudo = almacenamiento.getItem(CLAVE_SESIONES);
@@ -32,7 +54,20 @@ function leerSesiones() {
 }
 
 function escribirSesiones(sesiones) {
-  almacenamiento.setItem(CLAVE_SESIONES, JSON.stringify(sesiones));
+  escribir(CLAVE_SESIONES, JSON.stringify(sesiones));
+}
+
+// Deja la sesión como «en curso» y luego guarda la lista. En ese orden, si
+// la lista no se puede guardar, basta con quitar la marca de «en curso»:
+// nunca queda una sesión abierta guardada que no aparezca en pantalla.
+function guardarComoActiva(sesiones, idSesion) {
+  escribir(CLAVE_ACTIVA, idSesion);
+  try {
+    escribirSesiones(sesiones);
+  } catch (error) {
+    almacenamiento.removeItem(CLAVE_ACTIVA);
+    throw error;
+  }
 }
 
 function buscarSesion(sesiones, id) {
@@ -69,8 +104,7 @@ export function crearSesion({ contexto, codigoEvaluado }) {
 
   const sesiones = leerSesiones();
   sesiones.push(sesion);
-  escribirSesiones(sesiones);
-  almacenamiento.setItem(CLAVE_ACTIVA, sesion.id);
+  guardarComoActiva(sesiones, sesion.id);
   return copiar(sesion);
 }
 
@@ -134,8 +168,7 @@ export function retomarSesion(idSesion) {
   }
 
   sesion.estado = 'abierta';
-  escribirSesiones(sesiones);
-  almacenamiento.setItem(CLAVE_ACTIVA, sesion.id);
+  guardarComoActiva(sesiones, sesion.id);
   return copiar(sesion);
 }
 

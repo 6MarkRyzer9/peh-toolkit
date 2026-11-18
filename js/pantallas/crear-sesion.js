@@ -8,6 +8,7 @@ import {
   retomarSesion,
   descartarSesion,
   PATRON_CODIGO,
+  ErrorAlmacenamiento,
 } from '../almacen.js';
 
 export const NOMBRES_CONTEXTO = {
@@ -38,10 +39,16 @@ export function iniciarCrearSesion({ alCrear, alRetomar }) {
 
   formulario.addEventListener('submit', (evento) => {
     evento.preventDefault();
-    const sesion = crearSesion({
-      contexto: leerContexto(),
-      codigoEvaluado: campoCodigo.value,
-    });
+    let sesion;
+    try {
+      sesion = crearSesion({
+        contexto: leerContexto(),
+        codigoEvaluado: campoCodigo.value,
+      });
+    } catch (error) {
+      avisarSiNoSeGuardo(error, 'No se creó la sesión.');
+      return;
+    }
     formulario.reset();
     actualizarEstado();
     alCrear(sesion);
@@ -55,17 +62,37 @@ export function iniciarCrearSesion({ alCrear, alRetomar }) {
     }
     const id = boton.closest('[data-id]').dataset.id;
     if (boton.dataset.accion === 'retomar') {
-      avisarRetomar(retomarSesion(id));
+      let retomada;
+      try {
+        retomada = retomarSesion(id);
+      } catch (error) {
+        avisarSiNoSeGuardo(error, 'La sesión sigue en pausa.');
+        return;
+      }
+      avisarRetomar(retomada);
       return;
     }
     const seguro = window.confirm('¿Descartar esta sesión pausada y todas sus marcas?');
     if (seguro) {
-      descartarSesion(id);
+      try {
+        descartarSesion(id);
+      } catch (error) {
+        avisarSiNoSeGuardo(error, 'La sesión sigue en pausa.');
+      }
       pintarPausadas();
     }
   });
 
   actualizarEstado();
+}
+
+// Si el navegador no deja guardar, lo avisa sin perder nada de lo que ya
+// estaba guardado (CU-07, flujo 6a). Cualquier otro error se deja pasar.
+function avisarSiNoSeGuardo(error, consecuencia) {
+  if (!(error instanceof ErrorAlmacenamiento)) {
+    throw error;
+  }
+  window.alert(`${error.message} ${consecuencia}`);
 }
 
 // Se llama cada vez que se vuelve a esta pantalla, para que la lista

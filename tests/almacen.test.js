@@ -14,6 +14,7 @@ import {
   descartarSesion,
   listarSesiones,
   filtrarHistorial,
+  ErrorAlmacenamiento,
 } from '../js/almacen.js';
 
 // Imita la interfaz de localStorage que usa almacen.js.
@@ -239,4 +240,78 @@ test('datos corruptos en el almacenamiento no rompen la lectura', () => {
 
   assert.deepEqual(listarSesiones(), []);
   assert.equal(obtenerSesionActiva(), null);
+});
+
+// Almacenamiento lleno: rechaza las escrituras de las claves indicadas,
+// igual que el navegador cuando se acaba el espacio (QuotaExceededError).
+class AlmacenamientoLleno extends AlmacenamientoFalso {
+  constructor() {
+    super();
+    this.clavesRechazadas = new Set();
+  }
+  setItem(clave, valor) {
+    if (this.clavesRechazadas.has(clave)) {
+      throw new DOMException('Cuota excedida', 'QuotaExceededError');
+    }
+    super.setItem(clave, valor);
+  }
+}
+
+test('almacenamiento lleno al cerrar: avisa y la sesión sigue abierta con sus marcas (CU-07, 6a)', () => {
+  const lleno = new AlmacenamientoLleno();
+  usarAlmacenamiento(lleno);
+  const { id } = crearSesion({ contexto: 'aula', codigoEvaluado: 'L1EN' });
+  for (const criterio of ['C1', 'C2', 'C3', 'C4']) {
+    guardarMarca(id, criterio, 1);
+  }
+
+  lleno.clavesRechazadas.add('peh.sesiones');
+  assert.throws(() => cerrarSesion(id, { peh: 1, criteriosFallidos: [] }), ErrorAlmacenamiento);
+
+  const sigue = obtenerSesionActiva();
+  assert.equal(sigue.id, id);
+  assert.equal(sigue.estado, 'abierta');
+  assert.deepEqual(sigue.marcas, { C1: 1, C2: 1, C3: 1, C4: 1 });
+});
+
+test('almacenamiento lleno al marcar: la marca anterior queda intacta', () => {
+  const lleno = new AlmacenamientoLleno();
+  usarAlmacenamiento(lleno);
+  const { id } = crearSesion({ contexto: 'rrhh', codigoEvaluado: 'M4RK' });
+  guardarMarca(id, 'C1', 1);
+
+  lleno.clavesRechazadas.add('peh.sesiones');
+  assert.throws(() => guardarMarca(id, 'C1', 0), ErrorAlmacenamiento);
+  assert.equal(obtenerSesionActiva().marcas.C1, 1);
+});
+
+test('almacenamiento lleno al crear: no queda ninguna sesión a medias', () => {
+  const lleno = new AlmacenamientoLleno();
+  usarAlmacenamiento(lleno);
+  lleno.clavesRechazadas.add('peh.sesiones');
+
+  assert.throws(
+    () => crearSesion({ contexto: 'catedra', codigoEvaluado: 'N0VA' }),
+    ErrorAlmacenamiento,
+  );
+  assert.equal(obtenerSesionActiva(), null);
+  assert.deepEqual(listarSesiones(), []);
+  // La marca de «sesión en curso» también se deshizo.
+  assert.equal(lleno.getItem('peh.sesionActiva'), null);
+});
+
+test('almacenamiento lleno al retomar: la sesión sigue en pausa y nada queda en curso', () => {
+  const lleno = new AlmacenamientoLleno();
+  usarAlmacenamiento(lleno);
+  const { id } = crearSesion({ contexto: 'aula', codigoEvaluado: 'P4US' });
+  guardarMarca(id, 'C2', 0);
+  pausarSesion(id);
+
+  lleno.clavesRechazadas.add('peh.sesiones');
+  assert.throws(() => retomarSesion(id), ErrorAlmacenamiento);
+  assert.equal(obtenerSesionActiva(), null);
+  assert.equal(lleno.getItem('peh.sesionActiva'), null);
+  const [pausada] = listarSesiones();
+  assert.equal(pausada.estado, 'pausada');
+  assert.equal(pausada.marcas.C2, 0);
 });

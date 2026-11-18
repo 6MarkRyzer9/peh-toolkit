@@ -7,8 +7,9 @@
 // retomar la sesión más tarde desde la pantalla «Crear sesión».
 
 import { CRITERIOS, calcularVeredicto } from '../motor.js';
-import { guardarMarca, cerrarSesion, pausarSesion } from '../almacen.js';
+import { guardarMarca, cerrarSesion, pausarSesion, ErrorAlmacenamiento } from '../almacen.js';
 import { cargarPreguntas, cargarMicroguias, TIPOS_LIPMAN } from '../banco.js';
+import { generarJson, descargarArchivo } from '../exportar.js';
 import { NOMBRES_CONTEXTO } from './crear-sesion.js';
 
 export const NOMBRES_CRITERIOS = {
@@ -135,10 +136,24 @@ export function iniciarPantallaSesion({ alPausar, alCerrar }) {
     if (!sesion) {
       return;
     }
-    pausarSesion(sesion.id);
+    try {
+      pausarSesion(sesion.id);
+    } catch (error) {
+      avisarSiNoSeGuardo(error, 'La sesión sigue abierta.');
+      return;
+    }
     sesion = null;
     avisarPausa();
   });
+}
+
+// Si el navegador no deja guardar, lo avisa sin perder nada de lo que ya
+// estaba guardado (CU-07, flujo 6a). Cualquier otro error se deja pasar.
+function avisarSiNoSeGuardo(error, consecuencia) {
+  if (!(error instanceof ErrorAlmacenamiento)) {
+    throw error;
+  }
+  window.alert(`${error.message} ${consecuencia}`);
 }
 
 export function abrirSesion(nueva) {
@@ -213,7 +228,12 @@ function pantallaOculta() {
 }
 
 function marcar(criterio, valor) {
-  sesion = guardarMarca(sesion.id, criterio, valor);
+  try {
+    sesion = guardarMarca(sesion.id, criterio, valor);
+  } catch (error) {
+    avisarSiNoSeGuardo(error, `La marca de ${criterio} no se guardó.`);
+    return;
+  }
   pintar();
 }
 
@@ -231,12 +251,45 @@ function intentarCerrar() {
   if (!seguro) {
     return;
   }
-  const cerrada = cerrarSesion(sesion.id, {
-    peh: resultado.peh,
-    criteriosFallidos: resultado.fallidos,
-  });
+  let cerrada;
+  try {
+    cerrada = cerrarSesion(sesion.id, {
+      peh: resultado.peh,
+      criteriosFallidos: resultado.fallidos,
+    });
+  } catch (error) {
+    if (!(error instanceof ErrorAlmacenamiento)) {
+      throw error;
+    }
+    ofrecerRespaldo(error, resultado);
+    return;
+  }
   sesion = null;
   avisarCierre(cerrada);
+}
+
+// CU-07, flujo 6a: si el cierre no se pudo guardar, la sesión sigue abierta
+// y editable, y se ofrece descargar un respaldo JSON con las marcas y el
+// veredicto para no perder la evaluación.
+function ofrecerRespaldo(error, resultado) {
+  const respaldar = window.confirm(
+    `${error.message} La sesión sigue abierta y no se descartó.\n\n` +
+      '¿Descargar ahora un respaldo JSON con las marcas y el veredicto?',
+  );
+  if (!respaldar) {
+    return;
+  }
+  const respaldo = {
+    ...sesion,
+    fechaCierre: new Date().toISOString(),
+    peh: resultado.peh,
+    criteriosFallidos: resultado.fallidos,
+  };
+  descargarArchivo(
+    `peh-respaldo-${sesion.codigoEvaluado}.json`,
+    generarJson([respaldo]),
+    'application/json;charset=utf-8',
+  );
 }
 
 function construirCriterios() {
