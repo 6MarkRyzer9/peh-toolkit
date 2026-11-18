@@ -6,6 +6,7 @@ import { iniciarPantallaSesion, abrirSesion } from './pantallas/sesion.js';
 import { iniciarPantallaResultado, mostrarResultado } from './pantallas/resultado.js';
 import { iniciarPantallaHistorial, abrirHistorial } from './pantallas/historial.js';
 import { iniciarPantallaAcerca } from './pantallas/acerca.js';
+import { iniciarPantallaBanco, abrirBanco } from './pantallas/banco-preguntas.js';
 
 const pantallas = {
   crear: document.querySelector('#pantalla-crear'),
@@ -13,6 +14,7 @@ const pantallas = {
   resultado: document.querySelector('#pantalla-resultado'),
   historial: document.querySelector('#pantalla-historial'),
   acerca: document.querySelector('#pantalla-acerca'),
+  banco: document.querySelector('#pantalla-banco'),
 };
 
 function navegar(nombre) {
@@ -67,9 +69,20 @@ iniciarPantallaAcerca({
   },
 });
 
+iniciarPantallaBanco({
+  alVolver() {
+    irACrear();
+  },
+});
+
 document.querySelector('#boton-ver-historial').addEventListener('click', () => {
   abrirHistorial();
   navegar('historial');
+});
+
+document.querySelector('#boton-ver-banco').addEventListener('click', () => {
+  abrirBanco();
+  navegar('banco');
 });
 
 document.querySelector('#boton-ver-acerca').addEventListener('click', () => {

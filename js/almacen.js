@@ -8,6 +8,7 @@ import { CRITERIOS } from './motor.js';
 
 const CLAVE_SESIONES = 'peh.sesiones';
 const CLAVE_ACTIVA = 'peh.sesionActiva';
+const CLAVE_BANCO = 'peh.bancoImportado';
 
 export const CONTEXTOS = ['aula', 'catedra', 'rrhh'];
 export const PATRON_CODIGO = /^[A-Za-z0-9]{3,12}$/;
@@ -211,6 +212,29 @@ export function descartarSesion(idSesion) {
 
 export function listarSesiones() {
   return leerSesiones().map(copiar);
+}
+
+// Banco de preguntas importado (RF-13). Se guarda solo en este dispositivo;
+// mientras no haya uno, la app usa el banco incluido (data/banco.json).
+// banco.js revisa las preguntas antes de guardarlas.
+export function guardarBancoImportado({ preguntas, nombreArchivo }) {
+  const banco = { preguntas, nombreArchivo, importadoEl: new Date().toISOString() };
+  escribir(CLAVE_BANCO, JSON.stringify(banco));
+  return copiar(banco);
+}
+
+export function leerBancoImportado() {
+  try {
+    const crudo = almacenamiento.getItem(CLAVE_BANCO);
+    const banco = crudo ? JSON.parse(crudo) : null;
+    return banco && Array.isArray(banco.preguntas) ? banco : null;
+  } catch {
+    return null;
+  }
+}
+
+export function borrarBancoImportado() {
+  almacenamiento.removeItem(CLAVE_BANCO);
 }
 
 // Fecha local (AAAA-MM-DD) de un instante ISO, para que los filtros del

@@ -3,7 +3,7 @@
 // Así, con internet la app siempre está al día, y sin internet sigue
 // funcionando completa con la última versión descargada.
 
-const VERSION = 'peh-toolkit-v1';
+const VERSION = 'peh-toolkit-v2';
 
 // Todo lo que la app necesita para funcionar sin conexión.
 // Rutas relativas para que sirvan igual en local y en GitHub Pages.
@@ -21,6 +21,7 @@ const ARCHIVOS = [
   './js/pantallas/resultado.js',
   './js/pantallas/historial.js',
   './js/pantallas/acerca.js',
+  './js/pantallas/banco-preguntas.js',
   './data/banco.json',
   './data/microguias.json',
   './manifest.webmanifest',

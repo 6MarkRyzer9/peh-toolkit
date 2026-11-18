@@ -65,6 +65,10 @@
         Ver historial de sesiones
       </button>
 
+      <button type="button" id="boton-ver-banco" class="boton-enlace">
+        Banco de preguntas
+      </button>
+
       <button type="button" id="boton-ver-acerca" class="boton-enlace">
         Acerca de PEH Toolkit
       </button>
@@ -259,6 +263,47 @@
       </div>
 
       <button type="button" id="boton-volver-acerca" class="boton-enlace">
+        Volver a crear sesión
+      </button>
+    </section>
+
+    <!-- Pantalla 6: Banco de preguntas (RF-13: importar plantillas) -->
+    <section id="pantalla-banco" class="oculto">
+      <h1>PEH Toolkit</h1>
+      <p class="subtitulo">Banco de preguntas</p>
+
+      <div class="tarjeta">
+        <h2 class="titulo-tarjeta">Banco en uso</h2>
+        <p id="banco-origen" class="banco-origen"></p>
+        <ul id="banco-resumen" class="lista-resumen"></ul>
+      </div>
+
+      <div id="banco-mensaje" class="tarjeta mensaje oculto" role="status"></div>
+
+      <div class="acciones-banco">
+        <button type="button" id="boton-importar-banco">Importar banco (JSON)</button>
+        <button type="button" id="boton-descargar-banco" class="boton-suave">
+          Descargar banco en uso
+        </button>
+        <button type="button" id="boton-restaurar-banco" class="boton-suave oculto">
+          Volver al banco incluido
+        </button>
+      </div>
+      <input type="file" id="archivo-banco" accept=".json,application/json" class="oculto">
+
+      <p class="ayuda">
+        El archivo debe tener el mismo formato que <code>data/banco.json</code>:
+        cada pregunta con <code>id</code>, <code>contexto</code> (aula, catedra o rrhh),
+        <code>tipo</code> (proceso, contrafactual, justificacion o clarificacion),
+        <code>texto</code> y <code>activa</code>. Descarga el banco en uso para
+        tener una plantilla.
+      </p>
+      <p class="ayuda">
+        El banco importado se guarda solo en este dispositivo y se usa desde la
+        próxima sesión. Las preguntas editadas durante una sesión nunca cambian el banco.
+      </p>
+
+      <button type="button" id="boton-volver-banco" class="boton-enlace">
         Volver a crear sesión
       </button>
     </section>
