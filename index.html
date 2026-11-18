@@ -3,8 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#3b6ea5">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#eef1f8" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0c16" media="(prefers-color-scheme: dark)">
   <title>PEH Toolkit</title>
+  <link rel="icon" href="iconos/icono.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/estilos.css">
   <link rel="manifest" href="manifest.webmanifest">
 </head>
@@ -13,14 +16,13 @@
 
     <!-- Pantalla 1: Crear sesión (RF-01) -->
     <section id="pantalla-crear">
-      <h1>PEH Toolkit</h1>
-      <p class="subtitulo">Nueva sesión de evaluación</p>
+      <p class="marca-app">PEH Toolkit</p>
+      <h1>Nueva sesión</h1>
+      <p class="subtitulo">Elige el contexto e ingresa el código de la persona evaluada.</p>
 
       <form id="form-crear-sesion">
-        <fieldset class="campo" style="border: none; padding: 0; margin: 0 0 20px;">
-          <legend class="etiqueta" style="font-weight: 600; padding: 0; margin-bottom: 8px;">
-            Contexto de la evaluación
-          </legend>
+        <fieldset class="campo">
+          <legend class="etiqueta">Contexto de la evaluación</legend>
           <div class="opciones-contexto">
             <label class="opcion">
               <input type="radio" name="contexto" value="aula">
@@ -61,22 +63,23 @@
       <!-- Sesiones pausadas que se pueden retomar o descartar -->
       <div id="lista-pausadas"></div>
 
-      <button type="button" id="boton-ver-historial" class="boton-enlace">
-        Ver historial de sesiones
-      </button>
-
-      <button type="button" id="boton-ver-banco" class="boton-enlace">
-        Banco de preguntas
-      </button>
-
-      <button type="button" id="boton-ver-acerca" class="boton-enlace">
-        Acerca de PEH Toolkit
-      </button>
+      <nav class="lista-enlaces" aria-label="Más opciones">
+        <button type="button" id="boton-ver-historial" class="fila-enlace">
+          Historial de sesiones
+        </button>
+        <button type="button" id="boton-ver-banco" class="fila-enlace">
+          Banco de preguntas
+        </button>
+        <button type="button" id="boton-ver-acerca" class="fila-enlace">
+          Acerca de PEH Toolkit
+        </button>
+      </nav>
     </section>
 
     <!-- Pantalla 2: Sesión en curso (RF-04, RF-05; RN3) -->
     <section id="pantalla-sesion" class="oculto">
-      <h1>PEH Toolkit</h1>
+      <p class="marca-app">PEH Toolkit</p>
+      <h1 class="titulo-compacto">Sesión en curso</h1>
       <p class="subtitulo" id="sesion-info"></p>
 
       <!-- Pregunta sugerida (RF-02); editar o agregar no toca el banco (RF-03, RN7) -->
@@ -115,22 +118,21 @@
       <p id="estado-veredicto" class="tarjeta mensaje" role="status"></p>
 
       <p class="ayuda">
-        Atajos de teclado: 1 a 4 marcan «cumple» en C1 a C4; con Shift marcan «no cumple».
+        Atajos de teclado: 1 a 4 marcan «cumple» en C1 a C4; con Shift marcan
+        «no cumple»; C cierra la sesión.
       </p>
 
-      <div class="acciones-sesion">
-        <button type="button" id="boton-pausar" class="boton-suave">
-          Pausar
-        </button>
-        <button type="button" id="boton-cerrar" disabled>
-          Cerrar sesión
-        </button>
+      <!-- Barra flotante: «Cerrar sesión» siempre a mano mientras se conversa -->
+      <div class="barra-flotante">
+        <button type="button" id="boton-pausar" class="boton-suave">Pausar</button>
+        <button type="button" id="boton-cerrar" disabled>Cerrar sesión</button>
       </div>
     </section>
 
     <!-- Pantalla 3: Resultado de la sesión cerrada (RF-08, CU-09) -->
     <section id="pantalla-resultado" class="oculto">
-      <h1>PEH Toolkit</h1>
+      <p class="marca-app">PEH Toolkit</p>
+      <h1>Resultado</h1>
       <p class="subtitulo" id="resultado-info"></p>
 
       <div id="veredicto-tarjeta" class="tarjeta veredicto">
@@ -140,7 +142,7 @@
 
       <div id="lista-fallidos"></div>
 
-      <p id="resultado-marcas" class="tarjeta mensaje" aria-label="Marcas de la sesión"></p>
+      <div id="resultado-marcas" class="tarjeta marcas" role="group" aria-label="Marcas de la sesión"></div>
 
       <p class="ayuda">Registro cerrado: no se puede modificar.</p>
       <p class="ayuda">
@@ -149,12 +151,8 @@
       </p>
 
       <div class="acciones-sesion">
-        <button type="button" id="boton-exportar-csv">
-          Exportar CSV
-        </button>
-        <button type="button" id="boton-exportar-json">
-          Exportar JSON
-        </button>
+        <button type="button" id="boton-exportar-csv" class="boton-suave">Exportar CSV</button>
+        <button type="button" id="boton-exportar-json" class="boton-suave">Exportar JSON</button>
       </div>
 
       <button type="button" id="boton-nueva-sesion" class="boton-principal">
@@ -164,8 +162,11 @@
 
     <!-- Pantalla 4: Historial de sesiones cerradas (RF-10, RF-11) -->
     <section id="pantalla-historial" class="oculto">
-      <h1>PEH Toolkit</h1>
-      <p class="subtitulo">Historial de sesiones cerradas</p>
+      <button type="button" id="boton-volver-historial" class="boton-volver"
+        aria-label="Volver a crear sesión">Volver</button>
+      <p class="marca-app">PEH Toolkit</p>
+      <h1>Historial</h1>
+      <p class="subtitulo">Sesiones cerradas, de la más reciente a la más antigua.</p>
 
       <form id="filtros-historial" class="tarjeta filtros">
         <div>
@@ -201,19 +202,18 @@
       </p>
 
       <div class="acciones-sesion">
-        <button type="button" id="boton-historial-csv">Exportar CSV</button>
-        <button type="button" id="boton-historial-json">Exportar JSON</button>
+        <button type="button" id="boton-historial-csv" class="boton-suave">Exportar CSV</button>
+        <button type="button" id="boton-historial-json" class="boton-suave">Exportar JSON</button>
       </div>
-
-      <button type="button" id="boton-volver-historial" class="boton-enlace">
-        Volver a crear sesión
-      </button>
     </section>
 
     <!-- Pantalla 5: Acerca de (RNF-05: atribución visible en la app) -->
     <section id="pantalla-acerca" class="oculto">
-      <h1>PEH Toolkit</h1>
-      <p class="subtitulo">Acerca de esta aplicación</p>
+      <button type="button" id="boton-volver-acerca" class="boton-volver"
+        aria-label="Volver a crear sesión">Volver</button>
+      <p class="marca-app">PEH Toolkit</p>
+      <h1>Acerca de</h1>
+      <p class="subtitulo">Qué es esta aplicación y quiénes la hicieron.</p>
 
       <div class="tarjeta acerca">
         <h2>Qué es</h2>
@@ -233,9 +233,8 @@
       <div class="tarjeta acerca">
         <h2>Autoría del protocolo</h2>
         <p>
-          El marco teórico y el protocolo original de Evaluación de
-          Explicabilidad Humana (PEH) son obra de
-          <strong>Fabrizzio Fatoruzzo</strong>.
+          El marco teórico y el protocolo original del PEH (Protocolo de
+          Explicabilidad Humana) son obra de <strong>Fabrizzio Fatoruzzo</strong>.
         </p>
       </div>
 
@@ -261,16 +260,15 @@
           <a href="https://github.com/6MarkRyzer9/peh-toolkit">github.com/6MarkRyzer9/peh-toolkit</a>
         </p>
       </div>
-
-      <button type="button" id="boton-volver-acerca" class="boton-enlace">
-        Volver a crear sesión
-      </button>
     </section>
 
     <!-- Pantalla 6: Banco de preguntas (RF-13: importar plantillas) -->
     <section id="pantalla-banco" class="oculto">
-      <h1>PEH Toolkit</h1>
-      <p class="subtitulo">Banco de preguntas</p>
+      <button type="button" id="boton-volver-banco" class="boton-volver"
+        aria-label="Volver a crear sesión">Volver</button>
+      <p class="marca-app">PEH Toolkit</p>
+      <h1>Banco de preguntas</h1>
+      <p class="subtitulo">Preguntas Lipman que se sugieren en cada contexto.</p>
 
       <div class="tarjeta">
         <h2 class="titulo-tarjeta">Banco en uso</h2>
@@ -302,10 +300,6 @@
         El banco importado se guarda solo en este dispositivo y se usa desde la
         próxima sesión. Las preguntas editadas durante una sesión nunca cambian el banco.
       </p>
-
-      <button type="button" id="boton-volver-banco" class="boton-enlace">
-        Volver a crear sesión
-      </button>
     </section>
 
   </main>

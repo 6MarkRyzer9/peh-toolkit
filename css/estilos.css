@@ -1,213 +1,566 @@
-/* PEH Toolkit — estilos base, móvil primero (desde 360 px, RNF-10). */
+/* PEH Toolkit — estilos.
+   Diseño inspirado en Liquid Glass de Apple: superficies de vidrio
+   translúcido que dejan ver un fondo de color, bordes con brillo, botones
+   en cápsula y la tipografía del sistema. Modo claro y oscuro según el
+   sistema operativo.
+   Requisitos que cuida esta hoja:
+   - Móvil primero, desde 360 px y sin desplazamiento horizontal (RNF-10).
+   - Botones de al menos 44 × 44 px (RNF-13).
+   - Contraste WCAG 2.1 AA y foco visible con teclado (RNF-14). Los colores
+     de texto se verificaron sobre el vidrio en su peor caso de fondo.
+   - Con «Reducir transparencia» activado, o en navegadores sin desenfoque,
+     el vidrio se vuelve casi opaco para que el texto siga legible. */
 
 :root {
-  --fondo: #e8ecf1;
-  --superficie: #f2f5f9;
-  --texto: #2b3440;
-  --texto-suave: #5c6977;
-  --acento: #3b6ea5;
-  --cumple: #2f7d4f;
-  --no-cumple: #b3423a;
-  --sombra-clara: #ffffff;
-  --sombra-oscura: #c9d1dc;
-  --radio: 16px;
+  color-scheme: light dark;
+
+  /* Fondo de color detrás del vidrio */
+  --fondo-base: #eef1f8;
+  --fondo-mancha-1: #b9ccff;
+  --fondo-mancha-2: #f3c4e4;
+  --fondo-mancha-3: #bfe8dc;
+  --fondo-mancha-4: #ffe0bd;
+
+  /* Texto */
+  --texto: #1d1d1f;
+  --texto-suave: #4f4f57;
+
+  /* Colores de acción */
+  --acento: #0066cc;
+  --acento-texto: #0059b3;
+  --cumple: #1e7d36;
+  --cumple-texto: #196b2f;
+  --no-cumple: #d70015;
+  --no-cumple-texto: #b00011;
+
+  /* Tintes de vidrio para estados */
+  --tinte-acento: rgba(10, 132, 255, 0.12);
+  --tinte-cumple: rgba(52, 199, 89, 0.16);
+  --tinte-error: rgba(255, 59, 48, 0.12);
+
+  /* Vidrio */
+  --vidrio: rgba(255, 255, 255, 0.55);
+  --vidrio-fuerte: rgba(255, 255, 255, 0.72);
+  --vidrio-campo: rgba(255, 255, 255, 0.62);
+  --vidrio-borde: rgba(255, 255, 255, 0.78);
+  --vidrio-reflejo: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(255, 255, 255, 0.12) 38%,
+    rgba(255, 255, 255, 0) 60%,
+    rgba(255, 255, 255, 0.18) 100%
+  );
+  --vidrio-brillo: inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 0 rgba(255, 255, 255, 0.3);
+  --sombra: 0 10px 30px rgba(28, 39, 84, 0.12), 0 2px 6px rgba(28, 39, 84, 0.06);
+  --sombra-flotante: 0 18px 40px rgba(28, 39, 84, 0.22), 0 4px 12px rgba(28, 39, 84, 0.1);
+  --desenfoque: blur(24px) saturate(180%);
+  --separador: rgba(60, 60, 67, 0.16);
+  --pista: rgba(118, 118, 128, 0.14);
+
+  --foco: #0066cc;
+  --radio: 22px;
+  --radio-chico: 14px;
 }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fondo-base: #0a0c16;
+    --fondo-mancha-1: #1d2f7a;
+    --fondo-mancha-2: #4a1f5c;
+    --fondo-mancha-3: #0f4a4a;
+    --fondo-mancha-4: #5a3418;
+
+    --texto: #f5f5f7;
+    --texto-suave: #c4c4cc;
+
+    --acento: #0a6cd6;
+    --acento-texto: #6cb2ff;
+    --cumple-texto: #5ee07f;
+    --no-cumple-texto: #ff958e;
+
+    --tinte-acento: rgba(10, 132, 255, 0.18);
+    --tinte-cumple: rgba(48, 209, 88, 0.18);
+    --tinte-error: rgba(255, 69, 58, 0.18);
+
+    --vidrio: rgba(38, 40, 52, 0.55);
+    --vidrio-fuerte: rgba(52, 54, 68, 0.72);
+    --vidrio-campo: rgba(0, 0, 0, 0.28);
+    --vidrio-borde: rgba(255, 255, 255, 0.14);
+    --vidrio-reflejo: linear-gradient(
+      155deg,
+      rgba(255, 255, 255, 0.14) 0%,
+      rgba(255, 255, 255, 0.03) 40%,
+      rgba(255, 255, 255, 0) 60%,
+      rgba(255, 255, 255, 0.06) 100%
+    );
+    --vidrio-brillo: inset 0 1px 0 rgba(255, 255, 255, 0.18), inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+    --sombra: 0 10px 30px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.25);
+    --sombra-flotante: 0 18px 40px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.3);
+    --separador: rgba(255, 255, 255, 0.12);
+    --pista: rgba(118, 118, 128, 0.26);
+
+    --foco: #6cb2ff;
+  }
+}
+
+/* Sin desenfoque disponible: vidrio casi opaco. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root {
+    --vidrio: rgba(255, 255, 255, 0.92);
+    --vidrio-fuerte: rgba(255, 255, 255, 0.96);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --vidrio: rgba(38, 40, 52, 0.94);
+      --vidrio-fuerte: rgba(52, 54, 68, 0.97);
+    }
+  }
+}
+
+/* «Reducir transparencia» del sistema operativo. */
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --vidrio: rgba(255, 255, 255, 0.94);
+    --vidrio-fuerte: rgba(255, 255, 255, 0.97);
+    --vidrio-campo: #ffffff;
+    --desenfoque: none;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --vidrio: rgba(38, 40, 52, 0.96);
+      --vidrio-fuerte: rgba(52, 54, 68, 0.98);
+      --vidrio-campo: #1c1c22;
+    }
+  }
+}
+
+/* Base */
 
 * {
   box-sizing: border-box;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  background: var(--fondo);
-  color: var(--texto);
   min-height: 100vh;
+  min-height: 100dvh;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI",
+    Roboto, system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.4;
+  color: var(--texto);
+  background-color: var(--fondo-base);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Fondo de color fijo, como el fondo de pantalla del teléfono: es lo que
+   se ve borroso a través del vidrio. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(40rem 40rem at 0% 0%, var(--fondo-mancha-1), transparent 60%),
+    radial-gradient(36rem 36rem at 100% 18%, var(--fondo-mancha-2), transparent 60%),
+    radial-gradient(40rem 40rem at 8% 88%, var(--fondo-mancha-3), transparent 60%),
+    radial-gradient(34rem 34rem at 96% 100%, var(--fondo-mancha-4), transparent 60%),
+    var(--fondo-base);
 }
 
 .pantalla {
-  max-width: 480px;
+  max-width: 520px;
   margin: 0 auto;
-  padding: 24px 16px;
+  padding: 20px 16px 32px;
 }
 
-h1 {
-  font-size: 1.5rem;
-  margin: 0 0 4px;
-}
-
-.subtitulo {
-  color: var(--texto-suave);
-  margin: 0 0 24px;
-  font-size: 0.95rem;
-}
-
-.campo {
-  margin-bottom: 20px;
-}
-
-.campo > label,
-.campo > .etiqueta {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-/* Tarjetas con relieve suave (base visual Neumorphism del prototipo). */
-.tarjeta {
-  background: var(--superficie);
-  border-radius: var(--radio);
-  box-shadow: 6px 6px 12px var(--sombra-oscura), -6px -6px 12px var(--sombra-clara);
-  padding: 16px;
-}
-
-/* Opciones de contexto: botones de radio grandes (mínimo 44×44 px, RNF-13). */
-.opciones-contexto {
-  display: grid;
-  gap: 12px;
-}
-
-.opcion {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-height: 56px;
-  padding: 8px 16px;
-  background: var(--superficie);
-  border-radius: var(--radio);
-  box-shadow: 4px 4px 8px var(--sombra-oscura), -4px -4px 8px var(--sombra-clara);
-  cursor: pointer;
-}
-
-.opcion input {
-  width: 20px;
-  height: 20px;
-  accent-color: var(--acento);
-}
-
-.opcion:has(input:checked) {
-  box-shadow: inset 4px 4px 8px var(--sombra-oscura), inset -4px -4px 8px var(--sombra-clara);
-  outline: 2px solid var(--acento);
-}
-
-input[type="text"],
-input[type="date"],
-select {
-  width: 100%;
-  min-height: 48px;
-  padding: 8px 14px;
-  font-size: 1.1rem;
-  font-family: inherit;
-  color: var(--texto);
-  background: var(--superficie);
-  border: none;
-  border-radius: var(--radio);
-  box-shadow: inset 4px 4px 8px var(--sombra-oscura), inset -4px -4px 8px var(--sombra-clara);
-}
-
-input[type="text"]:focus-visible,
-input[type="date"]:focus-visible,
-select:focus-visible,
-.opcion:has(input:focus-visible),
-button:focus-visible {
-  outline: 3px solid var(--acento);
+:focus-visible {
+  outline: 3px solid var(--foco);
   outline-offset: 2px;
 }
 
-.ayuda {
-  color: var(--texto-suave);
-  font-size: 0.85rem;
-  margin: 6px 0 0;
+.oculto {
+  display: none !important;
 }
 
-button {
-  min-height: 48px;
-  min-width: 44px;
-  padding: 10px 20px;
+/* Títulos */
+
+.marca-app {
+  margin: 8px 4px 2px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+}
+
+h1 {
+  margin: 0 4px 4px;
+  font-size: 2rem;
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.titulo-compacto {
+  font-size: 1.5rem;
+}
+
+.subtitulo {
+  margin: 0 4px 20px;
+  font-size: 0.95rem;
+  color: var(--texto-suave);
+}
+
+.titulo-tarjeta {
+  margin: 0 0 6px;
   font-size: 1.05rem;
   font-weight: 600;
-  border: none;
+}
+
+/* Material de vidrio: tarjetas, opciones, listas y la barra flotante. */
+
+.tarjeta,
+.opcion,
+.lista-enlaces,
+.barra-flotante {
+  background-color: var(--vidrio);
+  background-image: var(--vidrio-reflejo);
+  border: 1px solid var(--vidrio-borde);
+  box-shadow: var(--vidrio-brillo), var(--sombra);
+  -webkit-backdrop-filter: var(--desenfoque);
+  backdrop-filter: var(--desenfoque);
+}
+
+.tarjeta {
   border-radius: var(--radio);
+  padding: 16px;
+}
+
+.mensaje {
+  margin-top: 14px;
+  padding: 14px 16px;
+}
+
+.mensaje ul {
+  margin: 8px 0 0;
+  padding-left: 20px;
+}
+
+.mensaje-ok {
+  background-color: var(--tinte-acento);
+}
+
+.mensaje-error {
+  background-color: var(--tinte-error);
+}
+
+/* Botones: cápsulas. El principal es azul con brillo; el secundario es de vidrio. */
+
+button {
+  min-width: 44px;
+  min-height: 48px;
+  padding: 12px 22px;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #ffffff;
+  background-color: var(--acento);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0) 55%);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 6px 16px rgba(0, 102, 204, 0.28);
   cursor: pointer;
-  background: var(--acento);
-  color: #fff;
-  box-shadow: 4px 4px 8px var(--sombra-oscura), -4px -4px 8px var(--sombra-clara);
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.boton-suave,
+.boton-guia,
+.boton-volver {
+  color: var(--acento-texto);
+  background-color: var(--vidrio-fuerte);
+  background-image: var(--vidrio-reflejo);
+  border-color: var(--vidrio-borde);
+  box-shadow: var(--vidrio-brillo), 0 2px 8px rgba(28, 39, 84, 0.08);
+  -webkit-backdrop-filter: var(--desenfoque);
+  backdrop-filter: var(--desenfoque);
 }
 
 button:disabled {
-  background: var(--superficie);
   color: var(--texto-suave);
+  background-color: var(--vidrio);
+  background-image: none;
+  border-color: var(--vidrio-borde);
+  box-shadow: none;
   cursor: not-allowed;
 }
 
 .boton-principal {
   width: 100%;
-  margin-top: 8px;
+  margin-top: 12px;
 }
 
-.mensaje {
-  margin-top: 20px;
-  padding: 14px 16px;
+.boton-enlace {
+  min-height: 44px;
+  padding: 8px 12px;
+  font-weight: 500;
+  color: var(--acento-texto);
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+/* «Volver» arriba a la izquierda, como en iOS. */
+.boton-volver {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  margin-bottom: 4px;
+  padding: 8px 18px 8px 12px;
+}
+
+.boton-volver::before {
+  content: "‹";
+  content: "‹" / "";
+  font-size: 1.6rem;
+  line-height: 0.7;
+  font-weight: 400;
+}
+
+/* Formularios */
+
+.campo {
+  margin: 0 0 20px;
+}
+
+fieldset.campo {
+  min-width: 0;
+  padding: 0;
+  border: none;
+}
+
+.campo > label,
+.campo > .etiqueta,
+.filtros label,
+.campo-tipo label {
+  display: block;
+  margin: 0 4px 8px;
+  padding: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.opciones-contexto {
+  display: grid;
+  gap: 10px;
+}
+
+.opcion {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 56px;
+  padding: 10px 16px;
+  border-radius: 18px;
+  cursor: pointer;
+}
+
+/* Botón de radio propio: círculo que se rellena con un punto blanco. */
+.opcion input[type="radio"] {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  border: 2px solid var(--texto-suave);
+  border-radius: 50%;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.opcion input[type="radio"]:checked {
+  border-color: var(--acento);
+  background: radial-gradient(circle, #ffffff 0 30%, var(--acento) 34%);
+}
+
+.opcion:has(input:checked) {
+  background-color: var(--vidrio-fuerte);
+  border-color: var(--acento);
+  box-shadow: var(--vidrio-brillo), 0 0 0 1px var(--acento), var(--sombra);
+}
+
+.opcion input:focus-visible {
+  outline: none;
+}
+
+.opcion:has(input:focus-visible) {
+  outline: 3px solid var(--foco);
+  outline-offset: 2px;
+}
+
+input[type="text"],
+input[type="date"],
+select,
+textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 16px;
+  font: inherit;
+  font-size: 1.05rem;
+  color: var(--texto);
+  background-color: var(--vidrio-campo);
+  border: 1px solid var(--vidrio-borde);
+  border-radius: var(--radio-chico);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
+  -webkit-backdrop-filter: var(--desenfoque);
+  backdrop-filter: var(--desenfoque);
+}
+
+::placeholder {
+  color: var(--texto-suave);
+  opacity: 1;
+}
+
+select {
+  padding-right: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%238e8e93' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 12px 8px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+textarea {
+  min-height: 96px;
+  margin-bottom: 12px;
+  resize: vertical;
+}
+
+.ayuda {
+  margin: 8px 4px 0;
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+}
+
+code {
+  padding: 1px 5px;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background: var(--pista);
+  border-radius: 6px;
+}
+
+/* Lista de accesos de la pantalla de inicio, como una lista agrupada de iOS. */
+
+.lista-enlaces {
+  margin-top: 28px;
+  overflow: hidden;
+  border-radius: var(--radio);
+}
+
+.fila-enlace {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 52px;
+  padding: 12px 16px;
+  font-weight: 500;
+  text-align: left;
+  color: var(--texto);
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.fila-enlace + .fila-enlace {
+  border-top: 1px solid var(--separador);
+}
+
+.fila-enlace::after {
+  content: "›";
+  content: "›" / "";
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--texto-suave);
+}
+
+.fila-enlace:active:not(:disabled) {
+  transform: none;
+  background: var(--pista);
+}
+
+.fila-enlace:focus-visible {
+  outline-offset: -3px;
 }
 
 /* Pantalla de sesión */
 
 .pregunta {
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .pregunta-tipo {
   display: block;
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--texto-suave);
+  color: var(--acento-texto);
 }
 
 .pregunta-texto {
-  margin: 8px 0 12px;
-  font-size: 1.05rem;
+  margin: 8px 0 14px;
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.4;
 }
 
 .pregunta-acciones {
   display: flex;
-  gap: 10px;
   flex-wrap: wrap;
+  gap: 8px;
 }
 
-.boton-suave {
-  background: var(--superficie);
-  color: var(--acento);
+.pregunta-acciones button {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
 }
 
-textarea {
-  width: 100%;
-  padding: 10px 14px;
+.campo-tipo {
   margin-bottom: 12px;
-  font: inherit;
-  color: var(--texto);
-  background: var(--superficie);
-  border: none;
-  border-radius: var(--radio);
-  box-shadow: inset 4px 4px 8px var(--sombra-oscura), inset -4px -4px 8px var(--sombra-clara);
-  resize: vertical;
 }
 
-textarea:focus-visible {
-  outline: 3px solid var(--acento);
-  outline-offset: 2px;
+#lista-criterios {
+  display: grid;
+  gap: 10px;
 }
 
 .criterio {
-  margin-bottom: 12px;
+  padding: 12px 12px 12px 16px;
 }
 
 .criterio-fila {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
 }
 
 .criterio-info {
@@ -216,69 +569,143 @@ textarea:focus-visible {
 }
 
 .criterio-codigo {
+  font-size: 1.05rem;
   font-weight: 700;
 }
 
 .criterio-nombre {
   display: block;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
+  line-height: 1.25;
   color: var(--texto-suave);
 }
 
+/* El estado va escrito («cumple (1)»); el color y el punto solo lo refuerzan (RNF-14). */
 .criterio-estado {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   margin-top: 4px;
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--texto-suave);
 }
 
-.botones-marca {
-  display: flex;
-  gap: 10px;
+.criterio-estado::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
 }
 
-/* Botones 1 y 0: mínimo 44×44 px (RNF-13). */
+.criterio[data-marca="1"] .criterio-estado {
+  color: var(--cumple-texto);
+}
+
+.criterio[data-marca="0"] .criterio-estado {
+  color: var(--no-cumple-texto);
+}
+
+.criterio-controles {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Control segmentado 1 | 0, como los de iOS. */
+.segmentado {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  background: var(--pista);
+  border-radius: 999px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
 .boton-marca {
-  width: 52px;
-  min-height: 48px;
-  background: var(--superficie);
+  width: 50px;
+  min-height: 44px;
+  padding: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
   color: var(--texto);
+  background: transparent;
+  box-shadow: none;
+}
+
+.boton-marca[aria-pressed="true"] {
+  color: #ffffff;
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0) 60%);
 }
 
 .boton-marca[data-valor="1"][aria-pressed="true"] {
-  background: var(--cumple);
-  color: #fff;
-  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.25);
+  background-color: var(--cumple);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 3px 10px rgba(30, 125, 54, 0.35);
 }
 
 .boton-marca[data-valor="0"][aria-pressed="true"] {
-  background: var(--no-cumple);
-  color: #fff;
-  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.25);
+  background-color: var(--no-cumple);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 3px 10px rgba(215, 0, 21, 0.3);
 }
 
-/* Botón «?» de la micro-guía (RF-06), también de al menos 44 px. */
+/* Botón «?» de la micro-guía (RF-06): círculo de vidrio de 44 px. */
 .boton-guia {
   width: 44px;
-  min-height: 48px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
   font-weight: 700;
+  border-radius: 50%;
 }
 
 .boton-guia[aria-expanded="true"] {
-  box-shadow: inset 4px 4px 8px var(--sombra-oscura), inset -4px -4px 8px var(--sombra-clara);
+  color: #ffffff;
+  background-color: var(--acento);
+  background-image: none;
 }
 
 .microguia-panel {
   margin-top: 10px;
-  padding-top: 8px;
-  border-top: 1px solid var(--sombra-oscura);
+  padding-top: 10px;
   font-size: 0.9rem;
   color: var(--texto-suave);
+  border-top: 1px solid var(--separador);
 }
 
 .microguia-panel p {
   margin: 4px 0;
+}
+
+.microguia-panel strong {
+  color: var(--texto);
+}
+
+#estado-veredicto {
+  font-weight: 500;
+}
+
+#estado-veredicto.estado-listo {
+  background-color: var(--tinte-acento);
+}
+
+/* Barra de acciones de la sesión: flota abajo, siempre a mano. */
+.barra-flotante {
+  position: sticky;
+  bottom: 12px;
+  z-index: 5;
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 6px;
+  background-color: var(--vidrio-fuerte);
+  border-radius: 999px;
+  box-shadow: var(--vidrio-brillo), var(--sombra-flotante);
+}
+
+.barra-flotante button {
+  flex: 1;
 }
 
 /* Pantalla de resultado */
@@ -286,39 +713,115 @@ textarea:focus-visible {
 .veredicto {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 14px;
+  padding: 24px 16px 20px;
   text-align: center;
-  padding: 20px 16px;
-  margin-bottom: 16px;
+}
+
+.veredicto::before {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 6px;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  border-radius: 50%;
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 60%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+.veredicto-aprobado {
+  background-color: var(--tinte-cumple);
+}
+
+.veredicto-aprobado::before {
+  content: "✓";
+  content: "✓" / "";
+  background-color: var(--cumple);
+}
+
+.veredicto-rechazado {
+  background-color: var(--tinte-error);
+}
+
+.veredicto-rechazado::before {
+  content: "✕";
+  content: "✕" / "";
+  background-color: var(--no-cumple);
 }
 
 .veredicto-titulo {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .veredicto-aprobado .veredicto-titulo {
-  color: var(--cumple);
+  color: var(--cumple-texto);
 }
 
 .veredicto-rechazado .veredicto-titulo {
-  color: var(--no-cumple);
+  color: var(--no-cumple-texto);
+}
+
+.veredicto-detalle {
+  color: var(--texto-suave);
 }
 
 .fallido {
-  margin-bottom: 12px;
-  border-left: 6px solid var(--no-cumple);
+  margin-bottom: 10px;
+  background-color: var(--tinte-error);
+}
+
+.fallido strong {
+  color: var(--no-cumple-texto);
 }
 
 .microguia {
-  margin: 8px 0 0;
+  margin: 6px 0 0;
   font-size: 0.9rem;
   color: var(--texto-suave);
 }
 
+.fallido .microguia strong {
+  color: var(--texto);
+}
+
+/* Las cuatro marcas en una fila, también a 360 px. */
+.marcas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  padding: 12px;
+}
+
+.marca-chip {
+  padding: 8px 4px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  white-space: nowrap;
+  border-radius: 999px;
+}
+
+.marca-1 {
+  color: var(--cumple-texto);
+  background: var(--tinte-cumple);
+}
+
+.marca-0 {
+  color: var(--no-cumple-texto);
+  background: var(--tinte-error);
+}
+
 .acciones-sesion {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   margin-top: 16px;
 }
 
@@ -326,19 +829,7 @@ textarea:focus-visible {
   flex: 1;
 }
 
-.enlace-descartar,
-.boton-enlace {
-  display: block;
-  margin: 20px auto 0;
-  background: none;
-  color: var(--texto-suave);
-  text-decoration: underline;
-  box-shadow: none;
-  font-weight: 400;
-  font-size: 0.9rem;
-}
-
-/* Pantalla de historial */
+/* Historial y sesiones en pausa */
 
 .filtros {
   display: grid;
@@ -348,18 +839,32 @@ textarea:focus-visible {
 }
 
 /* Sin desborde horizontal a 360 px (RNF-10): los campos de fecha tienen un
-   ancho mínimo intrínseco mayor que la columna y hay que anularlo. */
+   ancho mínimo propio mayor que la columna y hay que anularlo. */
 .filtros > div,
 .filtros input,
 .filtros select {
   min-width: 0;
 }
 
+/* Campos más compactos para que «dd-mm-aaaa» quepa entero a 360 px. */
+.filtros input,
+.filtros select {
+  padding-left: 12px;
+  font-size: 0.95rem;
+}
+
+.filtros input {
+  padding-right: 10px;
+}
+
+.filtros select {
+  padding-right: 32px;
+  background-position: right 12px center;
+}
+
 .filtros label {
-  display: block;
-  font-size: 0.85rem;
-  font-weight: 600;
   margin-bottom: 6px;
+  font-size: 0.85rem;
 }
 
 .sesion-item {
@@ -368,57 +873,70 @@ textarea:focus-visible {
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 10px;
+  padding: 12px 14px 12px 16px;
+}
+
+.sesion-item-info {
+  min-width: 0;
 }
 
 .sesion-item-detalle {
   display: block;
+  margin-top: 2px;
   font-size: 0.85rem;
   color: var(--texto-suave);
-  margin-top: 4px;
 }
 
 .insignia {
   flex-shrink: 0;
   padding: 6px 12px;
-  border-radius: 12px;
+  font-size: 0.85rem;
   font-weight: 700;
-  font-size: 0.9rem;
-  color: #fff;
+  white-space: nowrap;
+  color: #ffffff;
+  border-radius: 999px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .insignia-1 {
-  background: var(--cumple);
+  background-color: var(--cumple);
 }
 
 .insignia-0 {
-  background: var(--no-cumple);
+  background-color: var(--no-cumple);
 }
 
-/* Sesiones en pausa (pantalla «Crear sesión») */
-
 .titulo-pausadas {
-  font-size: 1.05rem;
-  margin: 28px 0 12px;
+  margin: 28px 4px 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
 }
 
 .pausada-acciones {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 2px;
   flex-shrink: 0;
+  align-items: stretch;
+  gap: 2px;
+}
+
+.pausada-acciones button {
+  min-height: 44px;
+  padding: 8px 18px;
 }
 
 .enlace-en-tarjeta {
   margin: 0;
-  min-height: 44px;
-  padding: 4px 8px;
+  color: var(--no-cumple-texto);
 }
 
-/* Pantalla «Acerca de» */
+/* «Acerca de» */
 
 .acerca {
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .acerca h2 {
@@ -436,11 +954,68 @@ textarea:focus-visible {
   margin-bottom: 0;
 }
 
-.acerca a {
-  color: var(--acento);
-  word-break: break-all;
+.acerca strong {
+  color: var(--texto);
 }
 
-.oculto {
-  display: none;
+/* Los enlaces dentro del texto van subrayados: no se distinguen solo por color. */
+.acerca a {
+  color: var(--acento-texto);
+  text-underline-offset: 2px;
+  overflow-wrap: anywhere;
+}
+
+/* Banco de preguntas */
+
+.banco-origen {
+  margin: 0 0 12px;
+  color: var(--texto-suave);
+}
+
+.lista-resumen {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lista-resumen li + li {
+  padding-top: 10px;
+  border-top: 1px solid var(--separador);
+}
+
+.resumen-detalle {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+}
+
+.acciones-banco {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* Animaciones solo si el sistema no pide reducir el movimiento. */
+@media (prefers-reduced-motion: no-preference) {
+  button {
+    transition: transform 0.15s ease, background-color 0.2s ease, box-shadow 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .opcion {
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+}
+
+/* Modo de alto contraste de Windows: los fondos desaparecen, así que la
+   marca elegida se indica con un borde. */
+@media (forced-colors: active) {
+  .boton-marca[aria-pressed="true"],
+  .boton-guia[aria-expanded="true"] {
+    outline: 3px solid CanvasText;
+    outline-offset: -3px;
+  }
 }

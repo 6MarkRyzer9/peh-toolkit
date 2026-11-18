@@ -53,9 +53,11 @@ export async function mostrarResultado(sesion) {
     ? 'Explicabilidad demostrada'
     : 'No se demuestra explicabilidad';
 
-  document.querySelector('#resultado-marcas').textContent = CRITERIOS.map(
-    (criterio) => `${criterio} = ${sesion.marcas[criterio]}`,
-  ).join('  ·  ');
+  // Cada marca va escrita («C3 = 0»); el color de la cápsula solo la refuerza.
+  document.querySelector('#resultado-marcas').innerHTML = CRITERIOS.map((criterio) => {
+    const valor = sesion.marcas[criterio] === 1 ? 1 : 0;
+    return `<span class="marca-chip marca-${valor}">${criterio} = ${valor}</span>`;
+  }).join('');
 
   // Micro-guía de cada criterio fallido (CU-09). Si el archivo no carga,
   // se muestran igual los criterios, solo sin la guía.
@@ -70,7 +72,8 @@ export async function mostrarResultado(sesion) {
     .map((criterio) => {
       const guia = microguias?.[criterio];
       const detalle = guia
-        ? `<p class="microguia">Micro-guía · Vale 1: ${guia.cumple} Vale 0: ${guia.noCumple}</p>`
+        ? `<p class="microguia"><strong>Vale 1:</strong> ${guia.cumple}</p>
+           <p class="microguia"><strong>Vale 0:</strong> ${guia.noCumple}</p>`
         : '';
       return `
       <div class="tarjeta fallido">
