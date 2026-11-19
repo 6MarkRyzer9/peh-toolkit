@@ -13,6 +13,8 @@ const ARCHIVOS = [
   './css/estilos.css',
   './js/app.js',
   './js/motor.js',
+  './js/fisica.js',
+  './js/tactil.js',
   './js/almacen.js',
   './js/banco.js',
   './js/exportar.js',

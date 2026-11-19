@@ -512,6 +512,63 @@ code {
   font-size: 0.9em;
 }
 
+/* Comportamiento táctil (inspirado en Liquid Glass): js/tactil.js anima con
+   resortes las variables de abajo solo mientras se toca. Si no tienen valor
+   (en reposo), todo se ve exactamente igual que el diseño original. */
+
+/* «isolation» permite dibujar el brillo detrás del texto pero sobre el fondo. */
+.superficie-tactil {
+  position: relative;
+  isolation: isolate;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* La sombra se acerca al presionar: --profundidad multiplica la sombra
+   original (sin valor = 1 = la misma sombra de .opcion y button). La opción
+   elegida conserva su sombra hundida, que tiene una regla más específica. */
+.opcion.superficie-tactil,
+button.superficie-tactil {
+  box-shadow:
+    calc(4px * var(--profundidad, 1)) calc(4px * var(--profundidad, 1))
+      calc(8px * var(--profundidad, 1)) var(--sombra-oscura),
+    calc(-4px * var(--profundidad, 1)) calc(-4px * var(--profundidad, 1))
+      calc(8px * var(--profundidad, 1)) var(--sombra-clara);
+}
+
+/* Brillo especular que sigue el dedo: capa que no recibe toques, detrás del
+   texto, y que en reposo es invisible (--brillo sin valor = opacidad 0). */
+.superficie-tactil::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle 120px at var(--brillo-x, 50%) var(--brillo-y, 50%),
+    rgba(255, 255, 255, 0.6),
+    rgba(255, 255, 255, 0) 70%
+  );
+  opacity: var(--brillo, 0);
+  pointer-events: none;
+}
+
+/* Brillo del borde al elegir un contexto (color de acento); se apaga solo. */
+.opcion.superficie-tactil::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: calc(var(--radio) + 3px);
+  box-shadow: 0 0 0 2px rgba(59, 110, 165, 0.35), 0 0 16px rgba(59, 110, 165, 0.45);
+  opacity: var(--halo, 0);
+  pointer-events: none;
+}
+
+/* Contorno de foco del campo de código: --foco son píxeles extra que se
+   cierran con un resorte (sin valor = 0 = el contorno original). */
+input.campo-vivo:focus-visible {
+  outline-offset: calc(2px + var(--foco, 0) * 1px);
+}
+
 .oculto {
   display: none;
 }

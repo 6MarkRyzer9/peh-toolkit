@@ -1,6 +1,7 @@
 // pantallas/crear-sesion.js — pantalla «Crear sesión»: elegir contexto
 // e ingresar el código del evaluado (RF-01). También muestra las sesiones
-// pausadas, con «Retomar» y «Descartar».
+// pausadas, con «Retomar» y «Descartar», y tiene respuesta táctil
+// inspirada en Liquid Glass (js/tactil.js) sin cambiar el diseño en reposo.
 
 import {
   crearSesion,
@@ -10,6 +11,14 @@ import {
   PATRON_CODIGO,
   ErrorAlmacenamiento,
 } from '../almacen.js';
+import {
+  superficieTactil,
+  campoVivo,
+  gota,
+  halo,
+  entradaEscalonada,
+  RESORTE_BOTON,
+} from '../tactil.js';
 
 export const NOMBRES_CONTEXTO = {
   aula: 'Aula escolar',
@@ -36,6 +45,23 @@ export function iniciarCrearSesion({ alCrear, alRetomar }) {
   }
 
   formulario.addEventListener('input', actualizarEstado);
+
+  // Respuesta táctil: las tarjetas de contexto y «Crear sesión» se comprimen
+  // al presionar y rebotan al soltar (el botón, más profundo); el campo de
+  // código responde al enfocar y al escribir.
+  for (const opcion of formulario.querySelectorAll('.opcion')) {
+    superficieTactil(opcion);
+  }
+  superficieTactil(botonCrear, { compresion: 0.96, profundidad: 0.25, resorte: RESORTE_BOTON });
+  campoVivo(campoCodigo);
+
+  // Al elegir un contexto: «gota» en el botón de radio y brillo en el borde.
+  formulario.addEventListener('change', (evento) => {
+    if (evento.target.name === 'contexto') {
+      gota(evento.target);
+      halo(evento.target.closest('.opcion'));
+    }
+  });
 
   formulario.addEventListener('submit', (evento) => {
     evento.preventDefault();
@@ -96,9 +122,24 @@ function avisarSiNoSeGuardo(error, consecuencia) {
 }
 
 // Se llama cada vez que se vuelve a esta pantalla, para que la lista
-// de pausadas esté siempre al día.
+// de pausadas esté siempre al día. Sus elementos entran escalonados.
 export function abrirCrearSesion() {
   pintarPausadas();
+  entradaEscalonada(elementosDeEntrada());
+}
+
+// Elementos que aparecen uno tras otro al mostrar la pantalla, de arriba abajo.
+function elementosDeEntrada() {
+  const pantalla = document.querySelector('#pantalla-crear');
+  return [
+    ...pantalla.querySelectorAll(':scope > h1, :scope > .subtitulo'),
+    pantalla.querySelector('legend'),
+    ...pantalla.querySelectorAll('.opcion'),
+    document.querySelector('#codigo-evaluado').closest('.campo'),
+    document.querySelector('#boton-crear'),
+    ...document.querySelectorAll('#lista-pausadas > *'),
+    ...pantalla.querySelectorAll(':scope > .boton-enlace'),
+  ].filter(Boolean);
 }
 
 function pintarPausadas() {
