@@ -441,6 +441,77 @@ textarea:focus-visible {
   word-break: break-all;
 }
 
+/* Selector de tipo Lipman al agregar una pregunta (CU-03, flujo 1a) */
+
+.campo-tipo {
+  margin-bottom: 12px;
+}
+
+.campo-tipo label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Pantalla «Banco de preguntas» (RF-13) */
+
+.titulo-tarjeta {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+}
+
+.banco-origen {
+  margin: 0 0 12px;
+  font-size: 0.95rem;
+  color: var(--texto-suave);
+}
+
+.lista-resumen {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lista-resumen li + li {
+  padding-top: 10px;
+  border-top: 1px solid var(--sombra-oscura);
+}
+
+.resumen-detalle {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+}
+
+.acciones-banco {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+/* Mensajes con lista (importar banco), con el mismo borde que «Falló». */
+.mensaje ul {
+  margin: 8px 0 0;
+  padding-left: 20px;
+}
+
+.mensaje-ok {
+  border-left: 6px solid var(--cumple);
+}
+
+.mensaje-error {
+  border-left: 6px solid var(--no-cumple);
+}
+
+code {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 0.9em;
+}
+
 .oculto {
   display: none;
 }
