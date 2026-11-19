@@ -303,15 +303,13 @@ function construirCriterios() {
           <span class="criterio-nombre">${NOMBRES_CRITERIOS[criterio]}</span>
           <span class="criterio-estado" data-estado>sin evaluar</span>
         </div>
-        <div class="criterio-controles">
-          <button type="button" class="boton-guia" aria-expanded="false"
+        <div class="botones-marca" role="group" aria-label="Marca de ${criterio}">
+          <button type="button" class="boton-guia boton-suave" aria-expanded="false"
             aria-controls="guia-${criterio}" aria-label="Micro-guía de ${criterio}">?</button>
-          <div class="segmentado" role="group" aria-label="Marca de ${criterio}">
-            <button type="button" class="boton-marca" data-valor="1"
-              aria-pressed="false" aria-label="${criterio} cumple">1</button>
-            <button type="button" class="boton-marca" data-valor="0"
-              aria-pressed="false" aria-label="${criterio} no cumple">0</button>
-          </div>
+          <button type="button" class="boton-marca" data-valor="1"
+            aria-pressed="false" aria-label="${criterio} cumple">1</button>
+          <button type="button" class="boton-marca" data-valor="0"
+            aria-pressed="false" aria-label="${criterio} no cumple">0</button>
         </div>
       </div>
       <div class="microguia-panel oculto" id="guia-${criterio}"></div>
@@ -337,15 +335,13 @@ function alternarGuia(criterio, boton) {
 
 function pintar() {
   document.querySelector('#sesion-info').textContent =
-    `${NOMBRES_CONTEXTO[sesion.contexto]} · Evaluado ${sesion.codigoEvaluado}`;
+    `${NOMBRES_CONTEXTO[sesion.contexto]} · Evaluado ${sesion.codigoEvaluado} · En curso`;
 
   for (const criterio of CRITERIOS) {
     const valor = sesion.marcas[criterio];
     const fila = document.querySelector(`.criterio[data-criterio="${criterio}"]`);
 
-    // El estado se indica con texto además del color (RNF-14); data-marca
-    // solo le da el color al texto.
-    fila.dataset.marca = valor === null ? '' : String(valor);
+    // El estado se indica con texto además del color (RNF-14).
     fila.querySelector('[data-estado]').textContent =
       valor === 1 ? 'cumple (1)' : valor === 0 ? 'no cumple (0)' : 'sin evaluar';
 
@@ -356,7 +352,6 @@ function pintar() {
 
   const resultado = calcularVeredicto(sesion.marcas);
   const estado = document.querySelector('#estado-veredicto');
-  estado.classList.toggle('estado-listo', resultado.completo);
   if (resultado.completo) {
     estado.textContent = 'Los cuatro criterios tienen valor. Puedes cerrar la sesión.';
   } else {
