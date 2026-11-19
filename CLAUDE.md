@@ -37,11 +37,13 @@ peh-toolkit/
 │   ├── almacen.js        guardar y leer sesiones
 │   ├── banco.js          cargar preguntas y micro-guías
 │   ├── exportar.js       CSV y JSON
+│   ├── fisica.js         resorte amortiguado (función pura)
+│   ├── tactil.js         respuesta táctil con resortes (Liquid Glass)
 │   └── pantallas/        crear-sesion.js, sesion.js, resultado.js, historial.js, acerca.js, banco-preguntas.js
 ├── data/banco.json       preguntas por contexto y tipo Lipman
 ├── data/microguias.json  condiciones de 1 y 0 por criterio
 ├── iconos/icono.svg      ícono de la PWA
-├── tests/                motor, almacen, exportar y banco (*.test.js)
+├── tests/                motor, almacen, exportar, banco y fisica (*.test.js)
 ├── manifest.webmanifest
 ├── service-worker.js
 ├── docs/                 ERS y plan (no se publican en la app)
@@ -69,7 +71,8 @@ calcularVeredicto(valores)
 - Fechas en ISO 8601. JSON con los mismos campos.
 
 ## Pantallas
-Base visual: estilo Liquid Glass de Apple (vidrio translúcido sobre fondo de color, botones en cápsula, modo claro y oscuro), decidido el 18 de noviembre de 2026; reemplaza la base Neumorphism del prototipo. Todo color de texto nuevo debe pasar contraste AA sobre el vidrio, y con «Reducir transparencia» el vidrio se vuelve casi opaco.
+Base visual: el prototipo de Claude Design del equipo, versión móvil (Neumorphism). No se cambia su aspecto en reposo (colores, tipografía, espaciados, bordes ni sombras).
+Comportamiento: respuesta táctil inspirada en Liquid Glass (`js/tactil.js` con los resortes de `js/fisica.js`): compresión y rebote al tocar, brillo que sigue el dedo, «gota» al elegir y entrada escalonada. Solo actúa mientras algo se mueve y respeta «reducir movimiento». Hoy está en «Crear sesión»; para otro botón basta `superficieTactil(elemento)`.
 1. **Crear sesión:** contexto (aula escolar, cátedra universitaria, entrevista técnica de RRHH) y código del evaluado.
 2. **Sesión:** pregunta sugerida con «Otra», «Editar» y «Agregar»; C1 a C4 con botones 1 y 0 y un botón «?» para la micro-guía; estado del veredicto («Pendiente: falta C4»); «Pausar» y «Cerrar sesión».
 3. **Resultado:** veredicto, criterio o criterios fallidos con su micro-guía, las cuatro marcas, «Exportar CSV», «Exportar JSON» y «Nueva sesión».

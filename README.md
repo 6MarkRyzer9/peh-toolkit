@@ -28,7 +28,8 @@ El veredicto vale 1 solo si los cuatro criterios valen 1. Un criterio «sin eval
 - Sesiones cerradas inmutables, historial con filtros y exportación a CSV (compatible con Excel) y JSON.
 - Importación de un banco de preguntas propio desde un archivo JSON.
 - Si el navegador no deja guardar, la app avisa y ofrece un respaldo: nunca pierde la sesión.
-- Diseño inspirado en Liquid Glass de Apple, con modo claro y oscuro. Móvil primero (desde 360 px), botones grandes, atajos de teclado y contraste WCAG AA.
+- Móvil primero (desde 360 px), botones grandes y atajos de teclado.
+- Respuesta táctil inspirada en Liquid Glass de Apple: las tarjetas y botones se comprimen y rebotan con resortes físicos, y un brillo sigue el dedo. El diseño no cambia en reposo, y con «reducir movimiento» activado no hay animaciones.
 
 ## Tecnología
 
@@ -51,7 +52,7 @@ Si después de un cambio el navegador muestra una versión vieja, recarga con Ct
 node --test
 ```
 
-Requiere Node 18 o superior y no usa dependencias. Cubren el motor (las 16 combinaciones y los casos «sin evaluar»), el almacenamiento, la exportación y la validación del banco.
+Requiere Node 18 o superior y no usa dependencias. Cubren el motor (las 16 combinaciones y los casos «sin evaluar»), el almacenamiento, la exportación, la validación del banco y el resorte de las animaciones.
 
 ## Banco de preguntas
 
