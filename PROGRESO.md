@@ -1,6 +1,6 @@
 # Progreso del PEH Toolkit
 
-Última actualización: 19 de noviembre de 2026.
+Última actualización: 25 de noviembre de 2026.
 
 ## Hecho
 
@@ -37,9 +37,17 @@
   - En reposo, los 25 elementos de la pantalla tienen las mismas cajas y estilos calculados que antes.
   - Al terminar cada animación no queda ningún estilo en línea, y una interrupción rápida no produce saltos (máximo 0,004 entre cuadros).
   - Con «reducir movimiento» activado (el navegador integrado lo trae así) no se anima nada y todo sigue funcionando.
+- Retroalimentación del cliente (24 de noviembre): se analizó punto por punto contra el código y la ERS. El plan quedó en `docs/tareas-retroalimentacion-cliente.md`: 12 tareas en orden, lo que ya estaba resuelto y las preguntas para el cliente. Nada de lo pedido condiciona el Hito 3.
+- Tarea 1 (punto 2.2): la micro-guía de C3 ya no habla de «consenso de la disciplina» a secas. Muestra la pregunta guía y los dos regímenes del PEH: **contenido** (coincide con lo aceptado por la disciplina o el currículo) y **forma** (las premisas sostienen la conclusión y la postura resiste objeciones). Detalles:
+  - «Versión ampliada» se abre con un toque, en la sesión y en el resultado. Usa `<details>`, que ya funciona con teclado y lector de pantalla. Su texto se armó con el documento del cliente y está pendiente de su validación.
+  - `data/microguias.json` ahora guarda cada micro-guía como párrafos con etiqueta opcional, así el cliente puede cambiar su estructura sin tocar código. C1, C2 y C4 se ven igual que antes.
+  - El texto se inserta con `textContent`, nunca como HTML.
+  - 4 pruebas nuevas en `tests/banco.test.js` (60 en total).
+  - Verificado en el navegador a 360 px: sin desplazamiento horizontal, la fila «Versión ampliada» mide 44 px de alto y no hay errores en la consola.
 
 ## Pendiente
 
+- Tareas de la retroalimentación del cliente, una a la vez y en el orden de `docs/tareas-retroalimentacion-cliente.md`.
 - Probar la respuesta táctil en celulares reales (Chrome en Android y Safari en iPhone): fluidez, vibración y sensación del rebote. En el navegador integrado se probó con un reloj simulado, porque con el panel oculto no corren las animaciones.
 - Si al equipo le gusta, llevar `superficieTactil` a otros botones (por ejemplo, 1 y 0 de la sesión); hoy está solo en «Nueva sesión», como se pidió.
 - Banco definitivo de 36 preguntas (Katalina y Renzo; valida Fabrizzio). Se puede probar desde la app con «Importar banco» antes de reemplazar `data/banco.json`.
@@ -48,6 +56,6 @@
 
 ## Siguiente paso
 
-Que el equipo pruebe la beta en sus celulares y anote detalles. Cuando el banco de 36 preguntas esté listo, importarlo desde la app para revisarlo y, con el visto bueno de Fabrizzio, reemplazar `data/banco.json`.
+Responder al cliente punto por punto y registrar los cambios aceptados en el control de cambios de la ERS (tarea 0); en esa respuesta, pedirle que valide la versión ampliada de C3. Seguir con la tarea 2 (cierre a prueba de doble toque). Avisar a Katalina y Renzo que el banco de 36 preguntas debería traer el campo `marco` (tarea 9). Cuando el banco esté listo, importarlo desde la app para revisarlo y, con el visto bueno de Fabrizzio, reemplazar `data/banco.json`.
 
 Nota técnica: después de un cambio, el navegador puede seguir usando módulos JS viejos de su caché (sobre todo cuando el service worker se está actualizando, o con el servidor local de Python, que no indica cómo cachear), e incluso mostrar un error tipo «does not provide an export named …». Se resuelve recargando con Ctrl+Shift+R.

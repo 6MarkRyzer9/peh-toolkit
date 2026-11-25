@@ -324,13 +324,42 @@ function alternarGuia(criterio, boton) {
   const abrir = panel.classList.contains('oculto');
   if (abrir && panel.childElementCount === 0) {
     const guia = microguias?.[criterio];
-    panel.innerHTML = guia
-      ? `<p><strong>Vale 1:</strong> ${guia.cumple}</p>
-         <p><strong>Vale 0:</strong> ${guia.noCumple}</p>`
-      : '<p>Micro-guía no disponible.</p>';
+    if (guia) {
+      panel.append(...guia.parrafos.map(crearParrafo));
+      if (guia.ampliada) {
+        panel.append(crearVersionAmpliada(guia));
+      }
+    } else {
+      panel.append(crearParrafo({ texto: 'Micro-guía no disponible.' }));
+    }
   }
   panel.classList.toggle('oculto', !abrir);
   boton.setAttribute('aria-expanded', String(abrir));
+}
+
+// Un párrafo de micro-guía: «Etiqueta: texto», con la etiqueta en negrita.
+// Se arma con textContent, así el texto del JSON nunca se interpreta como HTML.
+function crearParrafo({ etiqueta, texto }) {
+  const parrafo = document.createElement('p');
+  if (etiqueta) {
+    const negrita = document.createElement('strong');
+    negrita.textContent = `${etiqueta}:`;
+    parrafo.append(negrita, ' ');
+  }
+  parrafo.append(texto);
+  return parrafo;
+}
+
+// «Versión ampliada» de una micro-guía (hoy solo C3, punto 2.2 del cliente).
+// Se abre con un toque. <details> funciona solo, sin JavaScript extra, y ya
+// sirve con teclado (Enter o Espacio) y con lector de pantalla.
+export function crearVersionAmpliada(guia) {
+  const detalles = document.createElement('details');
+  detalles.className = 'microguia-ampliada';
+  const resumen = document.createElement('summary');
+  resumen.textContent = 'Versión ampliada';
+  detalles.append(resumen, ...guia.ampliada.map(crearParrafo));
+  return detalles;
 }
 
 function pintar() {

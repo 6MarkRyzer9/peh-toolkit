@@ -82,13 +82,20 @@ Comportamiento: respuesta táctil inspirada en Liquid Glass (`js/tactil.js` con 
 
 Nombres de los criterios: C1 Apropiación del Lenguaje · C2 Reconstrucción Lógica · C3 Adecuación Disciplinar · C4 Responsabilidad Agéntica.
 
-## Micro-guías iniciales (de la presentación del Hito 1; el cliente puede ajustarlas)
+## Micro-guías (en `data/microguias.json`; el cliente puede ajustarlas)
+C1, C2 y C4 vienen de la presentación del Hito 1:
+
 | Criterio | Vale 1 | Vale 0 |
 |---|---|---|
 | C1 | Traduce los conceptos a palabras propias. | Repite mecánicamente la formulación recibida. |
 | C2 | Explica causalmente premisas y conclusiones. | Exhibe saltos lógicos ciegos entre ambas. |
-| C3 | Su justificación calza con el consenso de la disciplina. | Usa premisas falsas o metodologías inventadas. |
 | C4 | Defiende su producto y asume autoría y límites. | Evade la responsabilidad delegando en la IA. |
+
+C3 la ajustó el cliente el 24-11-2026 (retroalimentación, punto 2.2), porque el PEH distingue dos regímenes (nota 4, p. 18). Muestra una pregunta guía («¿Lo evaluado es un hecho, procedimiento o concepto con respuesta aceptada, o una argumentación?») y dos condiciones:
+- **Contenido:** se cumple si la explicación coincide, con otras palabras, con lo aceptado por la disciplina o el currículo enseñado.
+- **Forma:** no se busca consenso sobre la opinión; se cumple si las premisas sostienen la conclusión y la postura resiste objeciones.
+
+C3 tiene además una «Versión ampliada» que se abre con un toque. Se armó con el texto del mismo documento del cliente y está pendiente de su validación.
 
 ## Banco de preguntas
 Katalina y Renzo redactan el banco (36 preguntas: 3 contextos × 4 tipos × 3) y Fabrizzio lo valida. Mientras no esté listo, usa pocas preguntas marcadas como ejemplo en `data/banco.json`, con el mismo formato.
