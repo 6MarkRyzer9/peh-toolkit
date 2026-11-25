@@ -1,5 +1,5 @@
 // Pruebas del banco de preguntas: validación al importar (RF-13), resumen
-// por contexto y tipo, y elección del banco en uso (node --test).
+// por contexto y tipo, elección del banco en uso y micro-guías (node --test).
 
 import { test, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
@@ -9,6 +9,8 @@ import {
   resumirBanco,
   obtenerBancoEnUso,
   cargarPreguntas,
+  cargarMicroguias,
+  microguiaEnLinea,
   LARGO_MAXIMO_TEXTO,
 } from '../js/banco.js';
 import {
@@ -17,9 +19,13 @@ import {
   leerBancoImportado,
   borrarBancoImportado,
 } from '../js/almacen.js';
+import { CRITERIOS } from '../js/motor.js';
 
 const BANCO_INCLUIDO = JSON.parse(
   readFileSync(new URL('../data/banco.json', import.meta.url), 'utf8'),
+);
+const MICROGUIAS = JSON.parse(
+  readFileSync(new URL('../data/microguias.json', import.meta.url), 'utf8'),
 );
 
 class AlmacenamientoFalso {
@@ -37,8 +43,11 @@ class AlmacenamientoFalso {
   }
 }
 
-// Node no puede pedir 'data/banco.json' por red: se sirve el archivo real.
-globalThis.fetch = async () => ({ ok: true, json: async () => BANCO_INCLUIDO });
+// Node no puede pedir los archivos de data/ por red: se sirven los reales.
+globalThis.fetch = async (url) => ({
+  ok: true,
+  json: async () => (String(url).endsWith('microguias.json') ? MICROGUIAS : BANCO_INCLUIDO),
+});
 
 beforeEach(() => {
   usarAlmacenamiento(new AlmacenamientoFalso());
@@ -172,4 +181,63 @@ test('un banco importado dañado en el almacenamiento no rompe la app', async ()
   usarAlmacenamiento(falso);
 
   assert.equal((await obtenerBancoEnUso()).origen, 'incluido');
+});
+
+// Micro-guías (RF-06)
+
+test('microguiaEnLinea junta los párrafos tal como los muestra el resultado', () => {
+  assert.equal(
+    microguiaEnLinea([
+      { etiqueta: 'Vale 1', texto: 'Traduce.' },
+      { etiqueta: 'Vale 0', texto: 'Repite.' },
+    ]),
+    'Vale 1: Traduce. Vale 0: Repite.',
+  );
+  // Un párrafo sin etiqueta, como la pregunta guía de C3, va tal cual.
+  assert.equal(
+    microguiaEnLinea([{ texto: '¿Hecho o argumento?' }, { etiqueta: 'Forma', texto: 'razona.' }]),
+    '¿Hecho o argumento? Forma: razona.',
+  );
+});
+
+// Cada párrafo necesita texto; la etiqueta es opcional, pero si está no va vacía.
+function revisarParrafos(parrafos, donde) {
+  assert.ok(Array.isArray(parrafos) && parrafos.length > 0, `${donde}: sin párrafos`);
+  for (const { etiqueta, texto } of parrafos) {
+    assert.ok(typeof texto === 'string' && texto.trim() !== '', `${donde}: párrafo sin texto`);
+    if (etiqueta !== undefined) {
+      assert.ok(typeof etiqueta === 'string' && etiqueta.trim() !== '', `${donde}: etiqueta vacía`);
+    }
+  }
+}
+
+test('las micro-guías incluidas cubren C1 a C4 y cada párrafo tiene texto', async () => {
+  const guias = await cargarMicroguias();
+  for (const criterio of CRITERIOS) {
+    revisarParrafos(guias[criterio]?.parrafos, criterio);
+    if (guias[criterio].ampliada !== undefined) {
+      revisarParrafos(guias[criterio].ampliada, `${criterio} (ampliada)`);
+    }
+  }
+});
+
+test('C1, C2 y C4 siguen con «Vale 1» y «Vale 0»', async () => {
+  const guias = await cargarMicroguias();
+  for (const criterio of ['C1', 'C2', 'C4']) {
+    const etiquetas = guias[criterio].parrafos.map((p) => p.etiqueta);
+    assert.deepEqual(etiquetas, ['Vale 1', 'Vale 0'], criterio);
+  }
+});
+
+test('C3 distingue contenido y forma y tiene versión ampliada (punto 2.2 del cliente)', async () => {
+  const { C3 } = await cargarMicroguias();
+  const [pregunta, ...regimenes] = C3.parrafos;
+
+  // Primero, la pregunta guía para elegir el régimen.
+  assert.equal(pregunta.etiqueta, undefined);
+  assert.match(pregunta.texto, /^¿.*\?$/);
+  // Luego, los dos regímenes, y en el de forma no se busca consenso.
+  assert.deepEqual(regimenes.map((p) => p.etiqueta), ['Contenido', 'Forma']);
+  assert.match(regimenes[1].texto, /no se busca consenso/);
+  assert.ok(C3.ampliada.length > 0);
 });

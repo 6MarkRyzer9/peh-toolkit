@@ -1,25 +1,62 @@
 {
-  "nota": "Micro-guías iniciales de la presentación del Hito 1; el cliente puede ajustarlas.",
+  "nota": "Micro-guías de C1 a C4; el cliente puede ajustarlas. Cada criterio tiene párrafos con una etiqueta opcional («Vale 1», «Contenido»…) y su texto, y puede tener una versión ampliada que se abre con un toque. C1, C2 y C4 vienen de la presentación del Hito 1. C3 viene de la retroalimentación del cliente del 24-11-2026 (punto 2.2), que distingue el régimen de contenido y el de forma (PEH, nota 4, p. 18). Su versión ampliada se armó con el texto de ese mismo documento y está pendiente de validación del cliente.",
   "criterios": {
     "C1": {
       "nombre": "Apropiación del Lenguaje",
-      "cumple": "Traduce los conceptos a palabras propias.",
-      "noCumple": "Repite mecánicamente la formulación recibida."
+      "parrafos": [
+        { "etiqueta": "Vale 1", "texto": "Traduce los conceptos a palabras propias." },
+        { "etiqueta": "Vale 0", "texto": "Repite mecánicamente la formulación recibida." }
+      ]
     },
     "C2": {
       "nombre": "Reconstrucción Lógica",
-      "cumple": "Explica causalmente premisas y conclusiones.",
-      "noCumple": "Exhibe saltos lógicos ciegos entre ambas."
+      "parrafos": [
+        { "etiqueta": "Vale 1", "texto": "Explica causalmente premisas y conclusiones." },
+        { "etiqueta": "Vale 0", "texto": "Exhibe saltos lógicos ciegos entre ambas." }
+      ]
     },
     "C3": {
       "nombre": "Adecuación Disciplinar",
-      "cumple": "Su justificación calza con el consenso de la disciplina.",
-      "noCumple": "Usa premisas falsas o metodologías inventadas."
+      "parrafos": [
+        {
+          "texto": "¿Lo evaluado es un hecho, procedimiento o concepto con respuesta aceptada, o una argumentación?"
+        },
+        {
+          "etiqueta": "Contenido",
+          "texto": "se cumple si la explicación coincide, con otras palabras, con lo aceptado por la disciplina o el currículo enseñado."
+        },
+        {
+          "etiqueta": "Forma",
+          "texto": "no se busca consenso sobre la opinión. Se cumple si las premisas sostienen la conclusión y la postura resiste objeciones. Una postura válida es una postura sostenible en marcos conocidos, no «la correcta». Si el tema es debatido, la respuesta debe poder situarse en alguna postura reconocida."
+        }
+      ],
+      "ampliada": [
+        {
+          "texto": "Decide el régimen según el tipo de trabajo o de pregunta, no según el contexto de la sesión: un mismo contexto puede combinar ambos."
+        },
+        {
+          "etiqueta": "Contenido",
+          "texto": "en ciencias, filosofía analítica, programación o física, C3 verifica si la explicación calza con el consenso disciplinar o con el currículo enseñado. Vale 0, por ejemplo, si afirma algo factualmente falso, confunde dos conceptos distintos, usa un concepto que no existe en el campo o una metodología no aceptada en la disciplina."
+        },
+        {
+          "etiqueta": "Forma",
+          "texto": "en escritura creativa, ensayos de opinión y ciertos trabajos de humanidades, C3 no desaparece: se desplaza al razonamiento. Verifica si las premisas sostienen la conclusión y si la postura se mantiene consistente frente a objeciones. Vale 0 si las premisas no sostienen la conclusión o si la postura no es sostenible en ningún marco conocido."
+        },
+        {
+          "texto": "No rechaces con 0 una opinión, un razonamiento o una crítica bien fundamentada solo porque no coincide con un supuesto consenso, ni busques consenso donde la disciplina no lo tiene."
+        },
+        {
+          "etiqueta": "Marco",
+          "texto": "para resolver C3, la pregunta debe estar acotada a un marco visible para el evaluado (autor, disciplina, currículo, postura o pieza de código). «¿Qué es la justicia?» no permite juzgarlo; «¿Qué es la justicia, para Hegel?» sí."
+        }
+      ]
     },
     "C4": {
       "nombre": "Responsabilidad Agéntica",
-      "cumple": "Defiende su producto y asume autoría y límites.",
-      "noCumple": "Evade la responsabilidad delegando en la IA."
+      "parrafos": [
+        { "etiqueta": "Vale 1", "texto": "Defiende su producto y asume autoría y límites." },
+        { "etiqueta": "Vale 0", "texto": "Evade la responsabilidad delegando en la IA." }
+      ]
     }
   }
 }

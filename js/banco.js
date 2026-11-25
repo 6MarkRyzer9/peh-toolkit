@@ -1,5 +1,6 @@
 // banco.js — carga de datos desde data/: las preguntas del banco
 // (data/banco.json, RF-02) y las micro-guías (data/microguias.json, RF-06).
+// No toca la pantalla: así se puede probar con node --test.
 // El banco se amplía editando el JSON, sin tocar código (RNF-09), o
 // importando un archivo con el mismo formato desde la app (RF-13).
 
@@ -140,7 +141,9 @@ export function resumirBanco(preguntas) {
   return resumen;
 }
 
-// Devuelve { C1: { nombre, cumple, noCumple }, ... }.
+// Devuelve { C1: { nombre, parrafos, ampliada }, ... }: cada párrafo es
+// { etiqueta, texto }, con etiqueta opcional, y «ampliada» solo existe en
+// los criterios que tienen versión ampliada (hoy, C3).
 // Se descarga una sola vez y queda en memoria.
 export async function cargarMicroguias() {
   if (!microguias) {
@@ -151,4 +154,13 @@ export async function cargarMicroguias() {
     microguias = (await respuesta.json()).criterios;
   }
   return microguias;
+}
+
+// Junta los párrafos de una micro-guía en una sola línea, para la pantalla
+// de resultado: «Vale 1: … Vale 0: …» o, en C3, la pregunta guía seguida
+// de «Contenido: …» y «Forma: …».
+export function microguiaEnLinea(parrafos) {
+  return parrafos
+    .map(({ etiqueta, texto }) => (etiqueta ? `${etiqueta}: ${texto}` : texto))
+    .join(' ');
 }
